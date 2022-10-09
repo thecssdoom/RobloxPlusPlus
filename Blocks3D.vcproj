@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="Windows-1252"?>
 <VisualStudioProject
 	ProjectType="Visual C++"
-	Version="8.00"
-	Name="Blocks3D"
+	Version="8,00"
+	Name="ROBLOX"
 	ProjectGUID="{6C4D6EEF-B1D1-456A-B850-92CAB17124BE}"
 	RootNamespace="Blocks3D"
 	>
@@ -21,7 +21,7 @@
 			ConfigurationType="1"
 			InheritedPropertySheets="$(VCInstallDir)VCProjectDefaults\UpgradeFromVC60.vsprops"
 			UseOfMFC="0"
-			UseOfATL="0"
+			UseOfATL="2"
 			ATLMinimizesCRunTimeLibraryUsage="false"
 			CharacterSet="2"
 			>
@@ -49,11 +49,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
-				InlineFunctionExpansion="2"
-				EnableIntrinsicFunctions="true"
-				FavorSizeOrSpeed="1"
-				OmitFramePointers="true"
-				WholeProgramOptimization="true"
+				InlineFunctionExpansion="1"
 				AdditionalIncludeDirectories="&quot;.\src\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -72,24 +68,22 @@
 			<Tool
 				Name="VCResourceCompilerTool"
 				PreprocessorDefinitions="NDEBUG"
-				Culture="4105"
+				Culture="1033"
 			/>
 			<Tool
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Advapi32.lib Comctl32.lib Comdlg32.lib Shell32.lib ode.lib Ole32.lib"
-				OutputFile="./Blocks3D.exe"
+				UseLibraryDependencyInputs="true"
+				AdditionalDependencies="Advapi32.lib Comctl32.lib Comdlg32.lib Shell32.lib Ole32.lib ode.lib OPCODE.lib"
+				OutputFile="./ROBLOX/RobloxApp.exe"
 				LinkIncremental="1"
 				SuppressStartupBanner="true"
+				AdditionalLibraryDirectories=""
+				AdditionalManifestDependencies=""
 				ProgramDatabaseFile=".\Release/Blocks3D.pdb"
 				SubSystem="2"
-				StackReserveSize="16777216"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
-				OptimizeForWindows98="2"
-				LinkTimeCodeGeneration="1"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -154,7 +148,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\libraries\ode-0.5\include\drawstuff&quot;;.\src\include"
+				AdditionalIncludeDirectories="&quot;.\src\include&quot; "
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
@@ -181,8 +175,8 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalDependencies="Advapi32.lib UxTheme.lib Comctl32.lib Comdlg32.lib Shell32.lib Urlmon.lib ole32.lib oleaut32.lib uuid.lib oded.lib"
-				OutputFile="./Blocks3D-Debug.exe"
+				AdditionalDependencies="Advapi32.lib UxTheme.lib Comctl32.lib Comdlg32.lib Shell32.lib Urlmon.lib ole32.lib oleaut32.lib uuid.lib ode.lib  OPCODE.lib"
+				OutputFile="./ROBLOX/RbxPlusPlusDebug.exe"
 				LinkIncremental="2"
 				SuppressStartupBanner="true"
 				GenerateDebugInformation="true"
@@ -259,6 +253,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\source\base64.cpp"
+				>
+			</File>
+			<File
 				RelativePath=".\src\source\BrowserCallHandler.cpp"
 				>
 			</File>
@@ -314,6 +312,14 @@
 				RelativePath=".\src\source\WindowFunctions.cpp"
 				>
 			</File>
+			<Filter
+				Name="XplicitNgine"
+				>
+				<File
+					RelativePath=".\src\source\XplicitNgine\XplicitNgine.cpp"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="Tool"
 				>
@@ -392,6 +398,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\src\source\DataModelV2\ExplosionInstance.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\source\DataModelV2\GroupInstance.cpp"
 					>
 					<FileConfiguration
@@ -458,6 +468,10 @@
 					</FileConfiguration>
 				</File>
 				<File
+					RelativePath=".\src\source\DataModelV2\LightingInstance.cpp"
+					>
+				</File>
+				<File
 					RelativePath=".\src\source\DataModelV2\PartInstance.cpp"
 					>
 					<FileConfiguration
@@ -502,11 +516,11 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\src\source\DataModel\SelectionService.cpp"
+					RelativePath=".\src\source\DataModelV2\SelectionService.cpp"
 					>
 				</File>
 				<File
-					RelativePath=".\ThumbnailGeneratorInstance.cpp"
+					RelativePath=".\src\source\DataModelV2\ThumbnailService.cpp"
 					>
 				</File>
 				<File
@@ -649,14 +663,6 @@
 						</FileConfiguration>
 					</File>
 				</Filter>
-				<Filter
-					Name="XplicitNgine"
-					>
-					<File
-						RelativePath=".\src\source\XplicitNgine\XplicitNgine.cpp"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Properties"
@@ -667,14 +673,6 @@
 				</File>
 				<File
 					RelativePath=".\src\source\Properties\Property.cpp"
-					>
-				</File>
-			</Filter>
-			<Filter
-				Name="Helpers"
-				>
-				<File
-					RelativePath=".\src\source\base64.cpp"
 					>
 				</File>
 			</Filter>
@@ -693,6 +691,10 @@
 			</File>
 			<File
 				RelativePath=".\src\include\ax.h"
+				>
+			</File>
+			<File
+				RelativePath=".\src\include\base64.h"
 				>
 			</File>
 			<File
@@ -756,14 +758,6 @@
 				>
 			</File>
 			<File
-				RelativePath=".\src\include\ToolEnum.h"
-				>
-			</File>
-			<File
-				RelativePath=".\src\include\VS2005CompatShim.h"
-				>
-			</File>
-			<File
 				RelativePath=".\src\include\win32Defines.h"
 				>
 			</File>
@@ -771,6 +765,18 @@
 				RelativePath=".\src\include\WindowFunctions.h"
 				>
 			</File>
+			<File
+				RelativePath=".\src\include\winver.h"
+				>
+			</File>
+			<Filter
+				Name="XplicitNgine"
+				>
+				<File
+					RelativePath=".\src\include\XplicitNgine\XplicitNgine.h"
+					>
+				</File>
+			</Filter>
 			<Filter
 				Name="RapidXML"
 				>
@@ -855,6 +861,10 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\include\DataModelV2\ExplosionInstance.h"
+					>
+				</File>
+				<File
 					RelativePath=".\src\include\DataModelV2\GroupInstance.h"
 					>
 				</File>
@@ -863,7 +873,15 @@
 					>
 				</File>
 				<File
+					RelativePath=".\src\include\DataModelV2\LaserbeamInstance.h"
+					>
+				</File>
+				<File
 					RelativePath=".\src\include\DataModelV2\LevelInstance.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\include\DataModelV2\LightingInstance.h"
 					>
 				</File>
 				<File
@@ -879,7 +897,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\include\DataModelV2\ThumbnailGeneratorInstance.h"
+					RelativePath=".\src\include\DataModelV2\ThumbnailService.h"
 					>
 				</File>
 				<File
@@ -914,14 +932,6 @@
 						>
 					</File>
 				</Filter>
-				<Filter
-					Name="XplicitNgine"
-					>
-					<File
-						RelativePath=".\src\include\XplicitNgine\XplicitNgine.h"
-						>
-					</File>
-				</Filter>
 			</Filter>
 			<Filter
 				Name="Properties"
@@ -935,29 +945,13 @@
 					>
 				</File>
 			</Filter>
-			<Filter
-				Name="Helpers"
-				>
-				<File
-					RelativePath=".\src\include\base64.h"
-					>
-				</File>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
 			Filter="ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe"
 			>
 			<File
-				RelativePath=".\Blocks3D.exe.manifest"
-				>
-			</File>
-			<File
 				RelativePath=".\Dialogs.rc"
-				>
-			</File>
-			<File
-				RelativePath=".\icon1.ico"
 				>
 			</File>
 			<File
@@ -966,6 +960,10 @@
 			</File>
 			<File
 				RelativePath=".\roblox_RN1_icon.ico"
+				>
+			</File>
+			<File
+				RelativePath=".\robloxplusplus.ico"
 				>
 			</File>
 		</Filter>

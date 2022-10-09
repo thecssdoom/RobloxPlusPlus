@@ -20,6 +20,12 @@ namespace Enum
 			Player = 7, KeyboardRight = 1, KeyboardLeft = 2, Joypad1 = 3, Joypad2 = 4, Chase = 5, Flee = 6, None = 0
 		};
 	}
+	namespace CameraType
+	{
+		enum Value {
+			Fixed = 0,Watch = 1,Attach = 2,Track = 3,Follow = 4
+		};
+	}
 	namespace ActionType
 	{
 		enum Value {

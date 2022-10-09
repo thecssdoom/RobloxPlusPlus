@@ -2,7 +2,7 @@
 #include <G3DAll.h>
 #include "Faces.h"
 
-float _bevelSize = 0.07F;
+float _bevelSize = 0.0F;
 std::vector<Vector3> _debugUniqueVertices;
 std::vector<GLfloat> _vertices;
 std::vector<GLfloat> _normals;
@@ -117,65 +117,74 @@ void drawBevels()
 	}
 }
 
+void render_markShadows(Vector4 light) {
+	
+}
+
+void util_renderSquare(Vector3 v1,Vector3 v2,Vector3 v3,Vector3 v4,Vector3 v5,Vector3 v6) {
+	addTriangle(v1,v2,v3);
+	addTriangle(v4,v5,v6);
+}
+
 void renderBlock(const Vector3& renderSize)
 {
-	addTriangle(Vector3(renderSize.x-_bevelSize,renderSize.y-_bevelSize,renderSize.z),
-					Vector3(-renderSize.x+_bevelSize,-renderSize.y+_bevelSize,renderSize.z),
-					Vector3(renderSize.x-_bevelSize,-renderSize.y+_bevelSize,renderSize.z)
-					);
+				util_renderSquare(Vector3(renderSize.x,renderSize.y,renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(renderSize.x,-renderSize.y,renderSize.z),
 
-				addTriangle(Vector3(-renderSize.x+_bevelSize,renderSize.y-_bevelSize,renderSize.z),
-					Vector3(-renderSize.x+_bevelSize,-renderSize.y+_bevelSize,renderSize.z),
-					Vector3(renderSize.x-_bevelSize,renderSize.y-_bevelSize,renderSize.z)
+					Vector3(-renderSize.x,renderSize.y,renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(renderSize.x,renderSize.y,renderSize.z)
 					);
 
 				// Top
-				addTriangle(Vector3(renderSize.x-_bevelSize,renderSize.y,renderSize.z-_bevelSize),
-					Vector3(renderSize.x-_bevelSize,renderSize.y,-renderSize.z+_bevelSize),
-					Vector3(-renderSize.x+_bevelSize,renderSize.y,renderSize.z-_bevelSize)
-					);
-				addTriangle(Vector3(-renderSize.x+_bevelSize,renderSize.y,renderSize.z-_bevelSize),
-					Vector3(renderSize.x-_bevelSize,renderSize.y,-renderSize.z+_bevelSize),
-					Vector3(-renderSize.x+_bevelSize,renderSize.y,-renderSize.z+_bevelSize)
+
+				util_renderSquare(Vector3(renderSize.x,renderSize.y,renderSize.z),
+					Vector3(renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x,renderSize.y,renderSize.z),
+
+					Vector3(-renderSize.x,renderSize.y,renderSize.z),
+					Vector3(renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x,renderSize.y,-renderSize.z)
 					);
 
 				// Back
-				addTriangle(Vector3(renderSize.x-_bevelSize,renderSize.y-_bevelSize,-renderSize.z),
-					Vector3(renderSize.x-_bevelSize,-renderSize.y+_bevelSize,-renderSize.z),
-					Vector3(-renderSize.x+_bevelSize,-renderSize.y+_bevelSize,-renderSize.z)
-					);
-				addTriangle(Vector3(renderSize.x-_bevelSize,renderSize.y-_bevelSize,-renderSize.z),
-					Vector3(-renderSize.x+_bevelSize,-renderSize.y+_bevelSize,-renderSize.z),
-					Vector3(-renderSize.x+_bevelSize,renderSize.y-_bevelSize,-renderSize.z)
+				util_renderSquare(Vector3(renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(renderSize.x,-renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,-renderSize.z),
+
+					Vector3(renderSize.x-_bevelSize,renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x+_bevelSize,-renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x+_bevelSize,renderSize.y,-renderSize.z)
 					);
 
 				// Bottom
-				addTriangle(Vector3(renderSize.x-_bevelSize,-renderSize.y,-renderSize.z+_bevelSize),
-					Vector3(renderSize.x-_bevelSize,-renderSize.y,renderSize.z-_bevelSize),
-					Vector3(-renderSize.x+_bevelSize,-renderSize.y,renderSize.z-_bevelSize)
-					);
-				addTriangle(Vector3(-renderSize.x+_bevelSize,-renderSize.y,renderSize.z-_bevelSize),
-					Vector3(-renderSize.x+_bevelSize,-renderSize.y,-renderSize.z+_bevelSize),
-					Vector3(renderSize.x-_bevelSize,-renderSize.y,-renderSize.z+_bevelSize)
+				util_renderSquare(Vector3(renderSize.x,-renderSize.y,-renderSize.z),
+					Vector3(renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,renderSize.z),
+
+					Vector3(-renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,-renderSize.z),
+					Vector3(renderSize.x,-renderSize.y,-renderSize.z)
 					);
  				// Left
-				addTriangle(Vector3(-renderSize.x,renderSize.y-_bevelSize,-renderSize.z+_bevelSize),
-					Vector3(-renderSize.x,-renderSize.y+_bevelSize,renderSize.z-_bevelSize),
-					Vector3(-renderSize.x,renderSize.y-_bevelSize,renderSize.z-_bevelSize)
-					);
-				addTriangle(Vector3(-renderSize.x,-renderSize.y+_bevelSize,renderSize.z-_bevelSize),
-					Vector3(-renderSize.x,renderSize.y-_bevelSize,-renderSize.z+_bevelSize),
-					Vector3(-renderSize.x,-renderSize.y+_bevelSize,-renderSize.z+_bevelSize)
+				util_renderSquare(Vector3(-renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(-renderSize.x,renderSize.y,renderSize.z),
+
+					Vector3(-renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(-renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(-renderSize.x,-renderSize.y,-renderSize.z)
 					);
 
  				// Right
-				addTriangle(Vector3(renderSize.x,renderSize.y-_bevelSize,renderSize.z-_bevelSize),
-					Vector3(renderSize.x,-renderSize.y+_bevelSize,renderSize.z-_bevelSize),
-					Vector3(renderSize.x,renderSize.y-_bevelSize,-renderSize.z+_bevelSize)
-					);
-				addTriangle(Vector3(renderSize.x,-renderSize.y+_bevelSize,-renderSize.z+_bevelSize),
-					Vector3(renderSize.x,renderSize.y-_bevelSize,-renderSize.z+_bevelSize),
-					Vector3(renderSize.x,-renderSize.y+_bevelSize,renderSize.z-_bevelSize)
+				util_renderSquare(Vector3(renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(renderSize.x,renderSize.y,renderSize.z),
+
+					Vector3(renderSize.x,-renderSize.y,renderSize.z),
+					Vector3(renderSize.x,renderSize.y,-renderSize.z),
+					Vector3(renderSize.x,-renderSize.y,-renderSize.z)
 					);
 
 		drawBevels(); 
@@ -224,9 +233,8 @@ void renderShape(const Enum::Shape::Value& shape, const Vector3& size, const Col
 			glPopMatrix();
 			/*Plusses, can possibly integrate into cylinder code later on*/
 			glVertexPointer(2, GL_FLOAT,0, square_arr);
-			glPushMatrix();
-			glDisable(GL_COLOR_ARRAY);
 			glColor3f(127,127,127);
+			glPushMatrix();
 			glRotatef(90,0,1,0);
 			glTranslatef(0,0,-(size.z+0.001F));
 			glScalef(0.75,0.75,0.75);
@@ -234,11 +242,9 @@ void renderShape(const Enum::Shape::Value& shape, const Vector3& size, const Col
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4); 
 			glScalef(1/(size.x*8),size.x*8,1);
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-			glEnable(GL_COLOR_ARRAY);
 			glPopMatrix();
 
 			glPushMatrix();
-			glDisable(GL_COLOR_ARRAY);
 			glRotatef(-90,0,1,0);
 			glTranslatef(0,0,-(size.z+0.001F));
 			glScalef(0.75,0.75,0.75);
@@ -246,7 +252,6 @@ void renderShape(const Enum::Shape::Value& shape, const Vector3& size, const Col
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
 			glScalef(1/(size.x*8),size.x*8,1);
 			glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-			glEnable(GL_COLOR_ARRAY);
 			glPopMatrix();
 			
 	}
@@ -456,6 +461,7 @@ void renderSurface(const char face, const Enum::SurfaceType::Value& surface, con
 	break;
 	case Enum::SurfaceType::Bumps:
 		{
+			/*
 			glRotatef(-90,1,0,0);
 			float x;
 			float y;
@@ -494,6 +500,7 @@ void renderSurface(const char face, const Enum::SurfaceType::Value& surface, con
 				glTranslatef(0,0,1);
 			}
 			glEnableClientState(GL_COLOR_ARRAY);
+			*/
 		}
 	break;
 	default:

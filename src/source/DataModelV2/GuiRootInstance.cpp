@@ -8,6 +8,8 @@
 #include "DataModelV2/GuiRootInstance.h"
 #include "DataModelV2/ImageButtonInstance.h"
 #include "Globals.h"
+#include "Application.h"
+#include "win32Defines.h"
 #include "StringFunctions.h"
 
 #include "Listener/GUDButtonListener.h"
@@ -41,9 +43,9 @@ TextButtonInstance* GuiRootInstance::makeTextButton()
 }
 GuiRootInstance::GuiRootInstance() : _message(""), _messageTime(0)
 {
-	g_fntdominant = GFont::fromFile(GetFileInPath("/content/font/dominant.fnt"));
-	g_fntlighttrek = GFont::fromFile(GetFileInPath("/content/font/lighttrek.fnt"));
-	_hideGui = false;
+	g_fntdominant			= GFont::fromFile(GetFileInPath("/content/font/dominant.fnt"));
+	g_fntlighttrek			= GFont::fromFile(GetFileInPath("/content/font/lighttrek.fnt"));
+	g_fntlighttrek_small	= GFont::fromFile(GetFileInPath("/content/font/lighttrek-small.fnt"));
 
 	//Bottom Left
 	TextButtonInstance* button = makeTextButton();
@@ -128,77 +130,87 @@ GuiRootInstance::GuiRootInstance() : _message(""), _messageTime(0)
 	toolbar.addButtonRef(button);
 
 	//Top bar
+	int a = 0;
+	int fontsize = 12;
+
 	button = makeTextButton();
-	button->boxBegin = Vector2(0, 0);
-	button->boxEnd = Vector2(125, 25);
+	button->boxBegin = Vector2(100*a, 0);
+	button->boxEnd = Vector2(100*(a+1), 20);
 	button->setParent(this);
-	button->font = g_fntlighttrek;
-	button->textColor = Color3::white();
-	button->boxColor = Color4::clear();
-	button->textOutlineColor = Color4(0.5F,0.5F,0.5F,0.5F);
-	button->title = "File";
-	button->textSize = 16;
-	button->fontLocationRelativeTo = Vector2(10, 0);
+	button->font = g_fntlighttrek_small;
+	button->textColor = Color4(0.0F,0.0F,0.0F,0.5F);
+	button->boxColor = Color4(0.65F,0.65F,0.65F,0.35F);
+	button->title = "Toolbox";
+	button->textSize = fontsize;
+	button->fontLocationRelativeTo = Vector2(10, 1);
 	button->setAllColorsSame();
-	button->boxColorOvr = Color4(0.6F,0.6F,0.6F,0.4F);
-	button->name = "file";
+	button->boxColorOvr = Color4(0.75F,0.75F,0.75F,1.0F);
+	button->name = "toolbox";
 	button->setButtonListener(menuListener);
 
+	a++;
 	button = makeTextButton();
-	button->boxBegin = Vector2(125, 0);
-	button->boxEnd = Vector2(250, 25);
+	button->boxBegin = Vector2(100*a, 0);
+	button->boxEnd = Vector2(100*(a+1), 20);
 	button->setParent(this);
-	button->font = g_fntlighttrek;
-	button->textColor = Color3::white();
-	button->boxColor = Color4::clear();
-	button->textOutlineColor = Color4(0.5F,0.5F,0.5F,0.5F);
-	button->title = "Edit";
-	button->textSize = 16;
-	button->fontLocationRelativeTo = Vector2(10, 0);
+	button->font = g_fntlighttrek_small;
+	button->textColor = Color4(0.0F,0.0F,0.0F,0.5F);
+	button->boxColor = Color4(0.65F,0.65F,0.65F,0.35F);
+	button->title = "Edit Mode";
+	button->textSize = fontsize;
+	button->fontLocationRelativeTo = Vector2(10, 1);
 	button->setAllColorsSame();
-	button->boxColorOvr = Color4(0.6F,0.6F,0.6F,0.4F);
+	button->boxColorOvr = Color4(0.75F,0.75F,0.75F,1.0F);
+	button->name = "edit";
+	button->setButtonListener(menuListener);
 
+	a++;
 	button = makeTextButton();
-	button->boxBegin = Vector2(250, 0);
-	button->boxEnd = Vector2(375, 25);
+	button->boxBegin = Vector2(100*a, 0);
+	button->boxEnd = Vector2(100*(a+1), 20);
 	button->setParent(this);
-	button->font = g_fntlighttrek;
-	button->textColor = Color3::white();
-	button->boxColor = Color4::clear();
-	button->textOutlineColor = Color4(0.5F,0.5F,0.5F,0.5F);
-	button->title = "View";
-	button->textSize = 16;
-	button->fontLocationRelativeTo = Vector2(10, 0);
+	button->font = g_fntlighttrek_small;
+	button->textColor = Color4(0.0F,0.0F,0.0F,0.5F);
+	button->boxColor = Color4(0.65F,0.65F,0.65F,0.35F);
+	button->title = "Help...";
+	button->textSize = fontsize;
+	button->fontLocationRelativeTo = Vector2(10, 1);
 	button->setAllColorsSame();
-	button->boxColorOvr = Color4(0.6F,0.6F,0.6F,0.4F);
+	button->boxColorOvr = Color4(0.75F,0.75F,0.75F,1.0F);
+	button->name = "help";
+	button->setButtonListener(menuListener);
 
+	a++;
 	button = makeTextButton();
-	button->boxBegin = Vector2(375, 0);
-	button->boxEnd = Vector2(500, 25);
+	button->boxBegin = Vector2(100*a, 0);
+	button->boxEnd = Vector2(100*(a+1), 20);
 	button->setParent(this);
-	button->font = g_fntlighttrek;
-	button->textColor = Color3::white();
-	button->boxColor = Color4::clear();
-	button->textOutlineColor = Color4(0.5F,0.5F,0.5F,0.5F);
-	button->title = "Insert";
-	button->textSize = 16;
-	button->fontLocationRelativeTo = Vector2(10, 0);
+	button->font = g_fntlighttrek_small;
+	button->textColor = Color4(0.0F,0.0F,0.0F,0.5F);
+	button->boxColor = Color4(0.65F,0.65F,0.65F,0.35F);
+	button->title = "Fullscreen";
+	button->textSize = fontsize;
+	button->fontLocationRelativeTo = Vector2(10, 1);
 	button->setAllColorsSame();
-	button->boxColorOvr = Color4(0.6F,0.6F,0.6F,0.4F);
+	button->boxColorOvr = Color4(0.75F,0.75F,0.75F,1.0F);
+	button->name = "fullscreen";
+	button->setButtonListener(menuListener);
 
+	a++;
 	button = makeTextButton();
-	button->boxBegin = Vector2(500, 0);
-	button->boxEnd = Vector2(625, 25);
+	button->boxBegin = Vector2(100*a, 0);
+	button->boxEnd = Vector2(100*(a+1), 20);
 	button->setParent(this);
-	button->font = g_fntlighttrek;
-	button->textColor = Color3::white();
-	button->boxColor = Color4::clear();
-	button->textOutlineColor = Color4(0.5F,0.5F,0.5F,0.5F);
-	button->title = "Format";
-	button->textSize = 16;
-	button->fontLocationRelativeTo = Vector2(10, 0);
+	button->font = g_fntlighttrek_small;
+	button->textColor = Color4(0.0F,0.0F,0.0F,0.5F);
+	button->boxColor = Color4(0.65F,0.65F,0.65F,0.35F);
+	button->title = "Exit";
+	button->textSize = fontsize;
+	button->fontLocationRelativeTo = Vector2(10, 1);
 	button->setAllColorsSame();
-	button->boxColorOvr = Color4(0.6F,0.6F,0.6F,0.4F);
+	button->boxColorOvr = Color4(0.75F,0.75F,0.75F,1.0F);
+	button->name = "exit";
+	button->setButtonListener(menuListener);
 
 
 	//Menu
@@ -330,14 +342,18 @@ GuiRootInstance::GuiRootInstance() : _message(""), _messageTime(0)
 	instance->name = "Delete";
 	instance->setButtonListener(delet);
 
+
+
+
+
 	instance = makeImageButton(
 		Texture::fromFile(GetFileInPath("/content/images/CameraZoomIn.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraZoomIn_ovr.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraZoomIn_dn.png")));
-	instance->size = Vector2(34,25);
+	instance->size = Vector2(31,31);
 	instance->floatBottom = true;
 	instance->floatRight = true;
-	instance->position = Vector2(-77, -90);
+	instance->position = Vector2(-32-10, -64);
 	instance->setParent(this);
 	instance->name = "ZoomIn";
 	instance->setButtonListener(cam);
@@ -346,14 +362,15 @@ GuiRootInstance::GuiRootInstance() : _message(""), _messageTime(0)
 		Texture::fromFile(GetFileInPath("/content/images/CameraZoomOut.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraZoomOut_ovr.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraZoomOut_dn.png")));
-	instance->size = Vector2(34,26);
+	instance->size = Vector2(31,31);
 	instance->floatBottom = true;
 	instance->floatRight = true;
-	instance->position = Vector2(-77, -31);
+	instance->position = Vector2(-32-10, -32);
 	instance->setParent(this);
 	instance->name = "ZoomOut";
 	instance->setButtonListener(cam);
 
+	/*
 	instance = makeImageButton(
 		Texture::fromFile(GetFileInPath("/content/images/CameraPanLeft.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraPanLeft_ovr.png")),
@@ -389,15 +406,16 @@ GuiRootInstance::GuiRootInstance() : _message(""), _messageTime(0)
 	instance->setParent(this);
 	instance->name = "CenterCam";
 	instance->setButtonListener(cam);
+	*/
 
 	instance = makeImageButton(
 		Texture::fromFile(GetFileInPath("/content/images/CameraTiltUp.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraTiltUp_ovr.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraTiltUp_dn.png")));
-	instance->size = Vector2(24,24);
+	instance->size = Vector2(31,31);
 	instance->floatBottom = true;
 	instance->floatRight = true;
-	instance->position = Vector2(-105, -75);
+	instance->position = Vector2(-64-10, -64);
 	instance->setParent(this);
 	instance->name = "TiltUp";
 	instance->setButtonListener(cam);
@@ -406,10 +424,10 @@ GuiRootInstance::GuiRootInstance() : _message(""), _messageTime(0)
 		Texture::fromFile(GetFileInPath("/content/images/CameraTiltDown.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraTiltDown_ovr.png")),
 		Texture::fromFile(GetFileInPath("/content/images/CameraTiltDown_dn.png")));
-	instance->size = Vector2(24,24);
+	instance->size = Vector2(31,31);
 	instance->floatBottom = true;
 	instance->floatRight = true;
-	instance->position = Vector2(-40, -75);
+	instance->position = Vector2(-64-10, -32);
 	instance->setParent(this);
 	instance->name = "TiltDown";
 	instance->setButtonListener(cam);
@@ -435,7 +453,6 @@ void GuiRootInstance::setDebugMessage(std::string msg, G3D::RealTime msgTime)
 
 void GuiRootInstance::renderGUI(G3D::RenderDevice* rd, double fps)
 {
-	if(_hideGui) return;
 	//TODO--Move these to their own instance
 
 	std::stringstream stream;
@@ -447,14 +464,31 @@ void GuiRootInstance::renderGUI(G3D::RenderDevice* rd, double fps)
 	stream.str("");
     stream.clear();
     stream << std::fixed << std::setprecision(3) << fps;
-    g_fntdominant->draw2D(rd, "FPS: " + stream.str(), Vector2(120, 25), 10, Color3::fromARGB(0xFFFF00), Color3::black());
+    g_fntlighttrek_small->draw2D(rd, "FPS: " + stream.str(), Vector2(120, 25), 10, Color3::fromARGB(0xFFFF00), Color3::black());
+
+	std::stringstream spinsky;
+
+	spinsky.str("");
+    spinsky.clear();
+	spinsky << g_usableApp->debug_isRotatingSky;
+
+	stream.str("");
+    stream.clear();
+	stream << "antialias samples: 16";
+	g_fntlighttrek_small->draw2D(rd, stream.str() + " | spin sky (numpad 0) : "+spinsky.str(), Vector2(120, 35), 12, Color3::fromARGB(0xFFFF00), Color3::black());
+
+	stream.str("");
+    stream.clear();
+    stream << std::fixed << std::setprecision(3) << GetHoldKeyState(0x60);
+
+	g_fntlighttrek_small->draw2D(rd, stream.str(), Vector2(120, 50), 12, Color3::fromARGB(0xFFFF00), Color3::black());
 #endif
 	//GUI Boxes	
 	Draw::box(G3D::Box(Vector3(0,25,0),Vector3(80,355,0)),rd,Color4(0.6F,0.6F,0.6F,0.4F), Color4(0,0,0,0));
-	Draw::box(G3D::Box(Vector3(rd->getWidth() - 120,rd->getHeight() - 117,0),Vector3(rd->getWidth(),rd->getHeight(),0)),rd,Color4(0.6F,0.6F,0.6F,0.4F), Color4(0,0,0,0));
+	//Draw::box(G3D::Box(Vector3(rd->getWidth() - 120,rd->getHeight() - 117,0),Vector3(rd->getWidth(),rd->getHeight(),0)),rd,Color4(0.6F,0.6F,0.6F,0.4F), Color4(0,0,0,0));
 	
 	//Camera menu title
-	g_fntlighttrek->draw2D(rd, "CameraMenu", Vector2(rd->getWidth()-(g_fntlighttrek->get2DStringBounds("CameraMenu", 14).x+1),rd->getHeight() - 120), 14, Color3::white(), Color4(0.5F,0.5F,0.5F,0.5F));
+	//g_fntlighttrek->draw2D(rd, "CameraMenu", Vector2(rd->getWidth()-(g_fntlighttrek->get2DStringBounds("CameraMenu", 14).x+1),rd->getHeight() - 120), 14, Color3::white(), Color4(0.5F,0.5F,0.5F,0.5F));
 
 	//Tools menu
 	Draw::box(G3D::Box(Vector3(5, 210,0),Vector3(75, 210,0)),rd,Color4(0.6F,0.6F,0.6F,0.4F), Color4(0.6F,0.6F,0.6F,0.4F));
@@ -540,8 +574,4 @@ void GuiRootInstance::onMouseLeftUp(G3D::RenderDevice* renderDevice, int x,int y
 			}
 		}
 	}
-}
-
-void GuiRootInstance::hideGui(bool doHide) {
-	_hideGui = doHide;
 }

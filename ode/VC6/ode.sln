@@ -1,0 +1,29 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual C++ Express 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "OPCODE", "..\OPCODE\Opcode.vcproj", "{B03F1D04-98A9-4995-9244-409F3297A003}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ode", "ode.vcproj", "{AC5CC729-CBFD-4B71-A6BC-F81ED61D3DC8}"
+	ProjectSection(ProjectDependencies) = postProject
+		{B03F1D04-98A9-4995-9244-409F3297A003} = {B03F1D04-98A9-4995-9244-409F3297A003}
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{B03F1D04-98A9-4995-9244-409F3297A003}.Debug|Win32.ActiveCfg = Debug|Win32
+		{B03F1D04-98A9-4995-9244-409F3297A003}.Debug|Win32.Build.0 = Debug|Win32
+		{B03F1D04-98A9-4995-9244-409F3297A003}.Release|Win32.ActiveCfg = Release|Win32
+		{B03F1D04-98A9-4995-9244-409F3297A003}.Release|Win32.Build.0 = Release|Win32
+		{AC5CC729-CBFD-4B71-A6BC-F81ED61D3DC8}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AC5CC729-CBFD-4B71-A6BC-F81ED61D3DC8}.Debug|Win32.Build.0 = Debug|Win32
+		{AC5CC729-CBFD-4B71-A6BC-F81ED61D3DC8}.Release|Win32.ActiveCfg = Release|Win32
+		{AC5CC729-CBFD-4B71-A6BC-F81ED61D3DC8}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal

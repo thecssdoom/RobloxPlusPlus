@@ -1,6 +1,5 @@
 #pragma once
 #include <ode/ode.h>
-#include "DatamodelV2/Instance.h"
 #include "DatamodelV2/PartInstance.h"
 
 class XplicitNgine : public Instance
@@ -12,9 +11,10 @@ public:
 	dSpaceID physSpace;
 	dJointGroupID contactgroup;
 
-	void step(float stepSize);
 	void createBody(PartInstance* partInstance);
+	void step(float stepSize);
 	void deleteBody(PartInstance* partInstance);
 	void updateBody(PartInstance* partInstance);
+
 	void resetBody(PartInstance* partInstance);
 };

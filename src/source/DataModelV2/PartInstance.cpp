@@ -9,12 +9,12 @@ PartInstance::PartInstance(void)
 {
 	PVInstance::PVInstance();
 	physBody = NULL;
+
     glList = glGenLists(1);
-	name = "Unnamed PVItem";
+	name = "Part";
 	className = "Part";
 	canCollide = true;
 	anchored = false;
-	dragging = false;
 	size = Vector3(2,1,4);
 	setCFrame(CoordinateFrame(Vector3(0,0,0)));
 	color = Color3::gray();
@@ -27,6 +27,7 @@ PartInstance::PartInstance(void)
 	left = Enum::SurfaceType::Smooth;
 	bottom = Enum::SurfaceType::Smooth;
 	shape = Enum::Shape::Block;
+	dragging = false;
 }
 
 bool PartInstance::isDragging()
@@ -43,13 +44,6 @@ void PartInstance::setDragging(bool value)
 	}
 }
 
-float PartInstance::getMass()
-{
-	if(shape == Enum::Shape::Block)
-		return size.x*size.y*size.z*0.7F;
-	else 
-		return 1.3333333333333333333333333333333F*(size.x/2)*(size.y/2)*(size.z/2)*0.7F;
-}
 
 Vector3 PartInstance::getVelocity()
 {
@@ -70,6 +64,11 @@ void PartInstance::setRotVelocity(Vector3 v)
 }
 
 void PartInstance::postRender(RenderDevice *rd)
+{
+	//Moved
+}
+
+void PartInstance::renderName(RenderDevice *rd)
 {
 	if(!nameShown)
 		return;
@@ -141,29 +140,29 @@ void PartInstance::setParent(Instance* prnt)
 	{
 		if(WorkspaceInstance* workspace = dynamic_cast<WorkspaceInstance*>(cparent))
 		{
+			std::cout << "Removed from partarray " << std::endl;
 			workspace->partObjects.erase(std::remove(workspace->partObjects.begin(), workspace->partObjects.end(), this), workspace->partObjects.end());
-		}
-		cparent = cparent->getParent();
-	}
-	Instance::setParent(prnt);
-	cparent = getParent();
-	while(cparent != NULL)
-	{
-		if(WorkspaceInstance* workspace = dynamic_cast<WorkspaceInstance*>(cparent))
-		{
-			workspace->partObjects.push_back(this);
 			break;
 		}
 		cparent = cparent->getParent();
 	}
-		
+	Instance::setParent(prnt);
+	while(parent != NULL)
+	{
+		if(WorkspaceInstance* workspace = dynamic_cast<WorkspaceInstance*>(parent))
+		{
+			workspace->partObjects.push_back(this);
+			break;
+		}
+		parent = parent->getParent();
+	}
 }
 
 PartInstance::PartInstance(const PartInstance &oinst)
 {
 	PVInstance::PVInstance(oinst);
-	physBody = NULL;
 	glList = glGenLists(1);
+	physBody = NULL;
 	//name = oinst.name;
 	//className = "Part";
 	name = oinst.name;
@@ -183,6 +182,7 @@ PartInstance::PartInstance(const PartInstance &oinst)
 	bottom = oinst.bottom;
 	shape = oinst.shape;
 	changed = true;
+	dragging = false;
 }
 
 void PartInstance::setSize(Vector3 newSize)
@@ -244,7 +244,6 @@ void PartInstance::setShape(Enum::Shape::Value shape)
 	}
 	if(this->physBody != NULL)
 		g_dataModel->getEngine()->resetBody(this);
-
 	changed = true;
 }
 
@@ -252,32 +251,20 @@ void PartInstance::setPosition(Vector3 pos)
 {
 	position = pos;
 	setCFrame(CoordinateFrame(cFrame.rotation, pos));
-
-	if (anchored)
-		g_dataModel->getEngine()->resetBody(this);
-}
-
-void PartInstance::setAnchored(bool anchored)
-{
-	this->anchored = anchored;
+	changed = true;
 	if(this->physBody != NULL)
 		g_dataModel->getEngine()->resetBody(this);
 }
-
-bool PartInstance::isAnchored()
-{
-	return this->anchored;
-}
-
 
 CoordinateFrame PartInstance::getCFrame()
 {
 	return cFrame;
 }
+
 void PartInstance::setCFrame(CoordinateFrame coordinateFrame)
 {
+	g_dataModel->getEngine()->updateBody(this);
 	setCFrameNoSync(coordinateFrame);
-		g_dataModel->getEngine()->updateBody(this);
 }
 
 void PartInstance::setCFrameNoSync(CoordinateFrame coordinateFrame)
@@ -324,12 +311,30 @@ bool PartInstance::collides(Box box)
 	return CollisionDetection::fixedSolidBoxIntersectsFixedSolidBox(getBox(), box);
 }
 
+void PartInstance::markShadows(RenderDevice* rd,Vector4 light) {
+ 	if (changed)
+	{
+		changed=false;
+		Vector3 renderSize = size/2;
+		glNewList(glList, GL_COMPILE);
+		//glScalef(0.5f,0.5f,0.5f);
+
+		render_markShadows(light);
+
+		glEndList();
+	}
+	rd->setObjectToWorldMatrix(cFrame);
+	glCallList(glList);
+	postRender(rd);
+}
+
 void PartInstance::render(RenderDevice* rd) {
  	if (changed)
 	{
 		changed=false;
 		Vector3 renderSize = size/2;
 		glNewList(glList, GL_COMPILE);
+		//glScalef(0.5f,0.5f,0.5f);
 		renderShape(this->shape, renderSize, color);
 		renderSurface(TOP, this->top, renderSize, this->controller, color);
 		renderSurface(FRONT, this->front, renderSize, this->controller, color);
@@ -350,7 +355,6 @@ PartInstance::~PartInstance(void)
 	/*
 	// Causes some weird ODE error
 	// Someone, please look into this
-
 	dBodyDestroy(physBody);
 	for (int i = 0; i < 3; i++) {
 		if (physGeom[i] != NULL) 
@@ -395,7 +399,7 @@ void PartInstance::PropUpdate(LPPROPGRIDITEM &item)
 	}
 	else if(strcmp(item->lpszPropName, "Anchored") == 0)
 	{
-		setAnchored(item->lpCurValue == TRUE);
+		anchored= item->lpCurValue == TRUE;
 	}
 	else if(strcmp(item->lpszPropName, "Offset") == 0)
 	{
@@ -508,4 +512,15 @@ std::vector<PROPGRIDITEM> PartInstance::getProperties()
 	return properties;
 }
 
+float PartInstance::getMass()
+{
+	if(shape == Enum::Shape::Block)
+		return size.x*size.y*size.z*0.7F;
+	else 
+		return 1.3333333333333333333333333333333F*(size.x/2)*(size.y/2)*(size.z/2)*0.7F;
+}
 
+bool PartInstance::isAnchored()
+{
+	return anchored;
+}

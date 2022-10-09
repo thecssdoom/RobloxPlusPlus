@@ -35,9 +35,11 @@
 #pragma warn(disable:2234)
 #endif
 
+
 #ifndef _WIN32_WINNT // Necessary for WM_MOUSEWHEEL support
 #define _WIN32_WINNT 0x0400
 #endif
+
 
 // MSVC++ Support
 #ifndef _CRT_SECURE_NO_WARNINGS
@@ -3917,7 +3919,9 @@ static BOOL Grid_OnGetSel(INT iItem)
 static VOID Grid_OnResetContent(VOID)
 {
     ListBox_ResetContent(g_lpInst->hwndListMap);
+
 	g_lpInst->lpCurrent = NULL;
+
     if (NULL != g_lpInst->hwndCtl1)
     {
         DestroyWindow(g_lpInst->hwndCtl1);

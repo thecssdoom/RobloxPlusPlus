@@ -14,5 +14,4 @@ private:
 	HWND	_propGrid;
 	HWND	_explorerComboBox;
 	void	_resize();
-	void	clearExplorer();
 };

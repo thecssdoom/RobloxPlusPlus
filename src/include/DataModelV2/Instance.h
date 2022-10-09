@@ -2,6 +2,10 @@
 #include <G3DAll.h>
 #include "propertyGrid.h"
 #include "map"
+
+#ifdef NO_SPRINTF
+#define sprintf_s sprintf
+#endif
 //#include "Properties/BoolProperty.h"
 
 class Instance
@@ -13,6 +17,7 @@ public:
 	virtual ~Instance(void);
 	std::string name;
 	virtual void render(RenderDevice*);
+	virtual void renderName(RenderDevice*);
 	virtual void update();
 	std::vector<Instance*> children; // All children.
 	std::string getClassName();
@@ -29,6 +34,8 @@ public:
 	virtual std::vector<PROPGRIDITEM> getProperties();
 	virtual void PropUpdate(LPPROPGRIDITEM &pItem);
 	int listicon;
+
+	void markShadows(RenderDevice * r,Vector4 light);
 protected:
 	std::string className;
 	Instance* parent;  // Another pointer.

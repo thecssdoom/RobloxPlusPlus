@@ -1,6 +1,8 @@
 #pragma once
 #include "DataModelV2/DataModelInstance.h"
+
 #include "XplicitNgine/XplicitNgine.h"
+
 
 class Application;
 
@@ -29,11 +31,11 @@ extern bool running;
 extern DataModelInstance* g_dataModel;
 extern XplicitNgine* g_xplicitNgine;
 extern Application* g_usableApp;
-extern SkyRef g_sky;
 extern RenderDevice g_renderDevice;
 
 extern GFontRef g_fntdominant;
 extern GFontRef g_fntlighttrek;
+extern GFontRef g_fntlighttrek_small;
 
 extern COLORREF g_acrCustClr[16]; //Will be dynamic later
 extern std::string cameraSound;

@@ -1,6 +1,5 @@
 #include "Tool/ArrowTool.h"
 #include "Application.h"
-#include "DataModelV2/SelectionService.h"
 
 ArrowTool::ArrowTool(void)
 {
@@ -28,7 +27,7 @@ void ArrowTool::onButton1MouseDown(Mouse mouse)
 	{
 		Vector3 mousePos = mouse.getPosition(g_dataModel->getSelectionService()->getSelection());
 		Vector3 targetPos = target->getPosition();
-		
+
 		g_dataModel->getSelectionService()->addSelected(target);
 		draggingPartOffset = targetPos-mousePos;
 	}
@@ -39,7 +38,7 @@ void ArrowTool::onButton1MouseUp(Mouse mouse)
 {
 	mouseDown = false;
 	dragging = false;
-
+	
 	for(size_t i = 0; i < g_dataModel->getSelectionService()->getSelection().size(); i++) //This will later decide primary and move all parts according to primary
 	{
 		if(PartInstance * part = dynamic_cast<PartInstance *>(g_dataModel->getSelectionService()->getSelection()[i]))
@@ -105,6 +104,7 @@ void ArrowTool::onMouseMoved(Mouse mouse)
 		return;
 	}
 	PartInstance * target = mouse.getTarget();
+	//if(target == NULL)
 }
 void ArrowTool::onSelect(Mouse mouse)
 {
@@ -123,6 +123,7 @@ void ArrowTool::onKeyUp(int key)
 	if(key == VK_CONTROL)
 		lctrlDown = false;
 }
+
 
 void ArrowTool::roundDeg(float &degree)
 {

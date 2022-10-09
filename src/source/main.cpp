@@ -63,7 +63,12 @@ LRESULT CALLBACK WndProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 LRESULT CALLBACK ToolboxProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 {
+    //Application *app = (Application *)GetWindowLongPtr(hwnd, GWL_USERDATA);
 	MessageBox(NULL, (LPCSTR)wParam, (LPCSTR)lParam, 1);
+	//if (app==NULL)
+	//{
+		//return DefWindowProc(hwnd, msg, wParam, lParam);
+	//}
 	switch(msg)
     {
 		case WM_SIZE:
@@ -143,24 +148,30 @@ LRESULT CALLBACK G3DProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 
 int main(int argc, char** argv) {
-#ifndef _DEBUG
 	try{
-#endif
 		hresult = OleInitialize(NULL);
+		
+
+
 		if (!AXRegister())
 			return 0;
 
 			
 		INITCOMMONCONTROLSEX icc;
+//		WNDCLASSEX wcx;
 
 		/* Initialize common controls. Also needed for MANIFEST's */
 
 		icc.dwSize = sizeof(icc);
 		icc.dwICC = ICC_WIN95_CLASSES/*|ICC_COOL_CLASSES|ICC_DATE_CLASSES|
-					   ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES*/;
+		ICC_PAGESCROLLER_CLASS|ICC_USEREX_CLASSES*/;
 		InitCommonControlsEx(&icc);
 
 		AudioPlayer::init();
+		/* GAppSettings settings;
+		settings.window.resizable = true;
+		settings.writeLicenseFile = false;
+		settings.window.center = true; */
 		HMODULE hThisInstance = GetModuleHandle(NULL);
 
 		if (!createWindowClass("mainHWND",WndProc,hThisInstance))
@@ -184,22 +195,22 @@ int main(int argc, char** argv) {
 			hThisInstance,
 			NULL
 		);
+
 		if(hwndMain == NULL)
 		{
 			MessageBox(NULL, "Critical error loading: Failed to create HWND, must exit", (g_appName + " Crash").c_str() , MB_OK);
 			return 0;
 		}
+
 		SendMessage(hwndMain, WM_SETICON, ICON_BIG,(LPARAM)LoadImage(GetModuleHandle(NULL), (LPCSTR)MAKEINTRESOURCEW(IDI_ICON1), IMAGE_ICON, 0, 0, LR_DEFAULTCOLOR | LR_DEFAULTSIZE));
 		
 		Globals::mainHwnd = hwndMain;
 		Application app = Application(hwndMain);
 		app.run();	
-#ifndef _DEBUG
 	}
 	catch(...)
 	{
 		OnError(-1);
 	}
-#endif
     return 0;
 }

@@ -3,8 +3,14 @@
 #include "WindowFunctions.h"
 #include "resource.h"
 #include "PropertyWindow.h"
+#include "Globals.h"
 #include "strsafe.h"
 #include "Application.h"
+
+/*typedef struct typPRGP {
+    Instance* instance;   // Declare member types
+    Property &prop;
+} PRGP;*/
 
 std::vector<PROPGRIDITEM> prop;
 std::vector<Instance*> children;
@@ -73,6 +79,7 @@ LRESULT CALLBACK PropProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 		break;
 		case WM_DRAWITEM:
 			{
+				std::cout << "Drawing?" << "\r\n";
 				COLORREF clrBackground;
 				COLORREF clrForeground;
 				TEXTMETRIC tm;
@@ -88,7 +95,7 @@ LRESULT CALLBACK PropProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 
 				// Get the food icon from the item data.
 				HBITMAP hbmIcon = LoadBitmap(GetModuleHandle(NULL), MAKEINTRESOURCE(IDB_BITMAP1));
-				HBITMAP hbmMask = CreateBitmapMask(hbmIcon, RGB(255, 0, 220));
+				HBITMAP hbmMask = CreateBitmapMask(hbmIcon, RGB(0, 0, 0));
 				// The colors depend on whether the item is selected.
 				clrForeground = SetTextColor(lpdis->hDC, 
 					GetSysColor(lpdis->itemState & ODS_SELECTED ?
@@ -201,18 +208,14 @@ LRESULT CALLBACK PropProc(HWND hwnd, UINT msg, WPARAM wParam, LPARAM lParam)
 	return 0; 
 }
 
-void PropertyWindow::clearExplorer()
-{
-	SendMessage(_explorerComboBox,CB_RESETCONTENT,0,0); 
-	SendMessage(_explorerComboBox,CB_SETCURSEL,0,(LPARAM)0);
-}
-
 void PropertyWindow::refreshExplorer(std::vector<Instance*> selectedInstances)
 {
 	Instance * instance = selectedInstances[0];
 	SendMessage(_explorerComboBox,CB_RESETCONTENT,0,0); 
 	parent = NULL;
 	children.clear();
+	//g_selectedInstances.clear();
+	//for (unsigned int i=0;i<g_selectedInstances.size();i++) {
 	children.push_back(selectedInstance);
 	SendMessage(_explorerComboBox, CB_ADDSTRING, 0, (LPARAM)selectedInstance->name.c_str()); 
 	if(selectedInstance->getParent() != NULL)
@@ -224,6 +227,7 @@ void PropertyWindow::refreshExplorer(std::vector<Instance*> selectedInstances)
 		parent = selectedInstance->getParent();
 		children.push_back(selectedInstance->getParent());
 	}
+	//children = g_selectedInstances[i]->getChildren();
 
 	std::vector<Instance*> selectedChildren = selectedInstance->getChildren();
 	for(size_t z = 0; z < selectedChildren.size(); z++)
@@ -342,7 +346,7 @@ void PropertyWindow::_resize()
 
 void PropertyWindow::UpdateSelected(std::vector<Instance *> instances)
 {
-	if(instances.size() <= 0)
+	if(instances.size() < 0)
 	{
 		ClearProperties();
 		return;
@@ -350,7 +354,7 @@ void PropertyWindow::UpdateSelected(std::vector<Instance *> instances)
 	Instance * instance = instances[0];
 	PropGrid_ResetContent(_propGrid);
 	prop = instance->getProperties();
-	//if (selectedInstance != instance)
+	if (selectedInstance != instance)
 	{
 		selectedInstance = instance;
 		for(size_t i = 0; i < prop.size(); i++)
@@ -371,6 +375,5 @@ void PropertyWindow::UpdateSelected(std::vector<Instance *> instances)
 
 void PropertyWindow::ClearProperties()
 {
-	clearExplorer();
 	PropGrid_ResetContent(_propGrid);
 }

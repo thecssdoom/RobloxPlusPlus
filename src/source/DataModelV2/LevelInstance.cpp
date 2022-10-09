@@ -10,13 +10,13 @@ LevelInstance::LevelInstance(void)
 	loseMessage = "You Lost. Try Again";
 	timer = 60.0F;
 	score = 0;
+	listicon = 15;
 	canDelete = false;
 }
 
 LevelInstance::~LevelInstance(void)
 {
 }
-
 
 static TCHAR* strActionType(int option)
 {
@@ -86,7 +86,6 @@ std::vector<PROPGRIDITEM> LevelInstance::getProperties()
 		"The message that shows when the player wins.",
 		(LPARAM)winMessage.c_str(),
 		PIT_EDIT));
-
 	properties.push_back(createPGI("Messages",
 		"LoseMessage",
 		"The message that shows when the player loses.",
@@ -111,18 +110,19 @@ std::vector<PROPGRIDITEM> LevelInstance::getProperties()
 
 	sprintf_s(timerTxt, "%g", timer);
 	sprintf_s(scoreTxt, "%d", score);
+
 	properties.push_back(createPGI("Gameplay",
 		"InitialTimerValue",
 		"The amount of time in seconds the player has to complete this level.\r\n\r\nPut 0 if time is limitless.",
 		(LPARAM)timerTxt,
 		PIT_EDIT));
-
 	properties.push_back(createPGI("Gameplay",
 		"InitialScoreValue",
 		"The amount of points the player starts with.",
 		(LPARAM)scoreTxt,
 		PIT_EDIT));
 
+	
 		properties.push_back(createPGI("Gameplay",
 		"TimerUpAction",
 		"Some temporary string here",
@@ -138,6 +138,7 @@ std::vector<PROPGRIDITEM> LevelInstance::getProperties()
 		PIT_COMBO,
 		TEXT("NoChange\0Increase\0Decrease\0")
 		));
+
 	return properties;
 }
 void LevelInstance::PropUpdate(LPPROPGRIDITEM &pItem)
@@ -145,18 +146,6 @@ void LevelInstance::PropUpdate(LPPROPGRIDITEM &pItem)
 	if(strcmp(pItem->lpszPropName, "InitialTimerValue") == 0)
 	{
 		timer = atoi((LPSTR)pItem->lpCurValue);
-	}
-	if(strcmp(pItem->lpszPropName, "InitialScoreValue") == 0)
-	{
-		score = atof((LPSTR)pItem->lpCurValue);
-	}
-	if(strcmp(pItem->lpszPropName, "LoseMessage") == 0)
-	{
-		loseMessage = (LPSTR)pItem->lpCurValue;
-	}
-	if(strcmp(pItem->lpszPropName, "WinMessage") == 0)
-	{
-		winMessage = (LPSTR)pItem->lpCurValue;
 	}
 	else if(strcmp(pItem->lpszPropName, "TimerUpAction") == 0)
 	{
@@ -173,6 +162,18 @@ void LevelInstance::PropUpdate(LPPROPGRIDITEM &pItem)
 	else if(strcmp(pItem->lpszPropName, "RunOnOpen") == 0)
 	{
 		RunOnOpen = pItem->lpCurValue == TRUE;
+	}
+	if(strcmp(pItem->lpszPropName, "InitialScoreValue") == 0)
+	{
+		score = atof((LPSTR)pItem->lpCurValue);
+	}
+	if(strcmp(pItem->lpszPropName, "LoseMessage") == 0)
+	{
+		loseMessage = (LPSTR)pItem->lpCurValue;
+	}
+	if(strcmp(pItem->lpszPropName, "WinMessage") == 0)
+	{
+		winMessage = (LPSTR)pItem->lpCurValue;
 	}
 	else
 		Instance::PropUpdate(pItem);
@@ -218,7 +219,7 @@ void LevelInstance::Step(SimTime sdt)
 				score -= 1;
 			break;
 	}
-	if (timer >= sdt){
+	if (timer >= sdt){ 
 		timer -= sdt;
 	}
 	else{

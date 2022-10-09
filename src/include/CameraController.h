@@ -5,7 +5,7 @@
 #include "Globals.h"
 #include <string>
 
-#define CAM_ZOOM_MIN 0.1f
+#define CAM_ZOOM_MIN 0.5f
 #define CAM_ZOOM_MAX 100.f
 
 class Application;
@@ -26,10 +26,19 @@ class CameraController {
 		void panRight();
 		void tiltUp();
 		void tiltDown();
-		void zoomExtents();
 		void Zoom(short delta);
+		void zoomExtents();
+
+		void setFocus(const PartInstance& part);
+
 		bool onMouseWheel(int x, int y, short delta);
 		GCamera* getCamera();
+
+		Enum::CameraType::Value cameraType;
+
+		PartInstance* focusPart;
+
+		G3D::CoordinateFrame targetCoordinate;
 	private:
 		Vector3 translation;
 		Vector3	focusPosition;

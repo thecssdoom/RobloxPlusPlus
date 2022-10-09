@@ -2,7 +2,7 @@
 #include "DataModelV2/GuiRootInstance.h"
 #include "DataModelV2/ToggleImageButtonInstance.h"
 #include "DataModelV2/DataModelInstance.h"
-#include "DataModelV2/ThumbnailGeneratorInstance.h"
+#include "DataModelV2/ThumbnailService.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -15,22 +15,34 @@ using namespace std;
 using namespace rapidxml;
 
 
+
 DataModelInstance::DataModelInstance(void)
 {
 	Instance::Instance();
 	workspace = new WorkspaceInstance();
 	guiRoot = new GuiRootInstance();
 	level = new LevelInstance();
-	thumbnailGenerator = new ThumbnailGeneratorInstance();
-
 	selectionService = new SelectionService();
 	selectionService->setPropertyWindow(g_usableApp->_propWindow);
+	thumbnailGenerator = new ThumbnailGeneratorInstance();
+	lighting = new LightingInstance();
+
+	//children.push_back(workspace);
+	//children.push_back(level);
 	className = "dataModel";
+	//mousex = 0;
+	//mousey = 0;
+	//mouseButton1Down = false;
 	showMessage = false;
 	canDelete = false;
 	_modY=0;
+
 	workspace->setParent(this);
 	level->setParent(this);
+	lighting->setParent(this);
+	selectionService->setParent(this);
+	thumbnailGenerator->setParent(this);
+
 	_loadedFileName="..//skooter.rbxm";
 	listicon = 5;
 	running = false;
@@ -44,6 +56,7 @@ void DataModelInstance::resetEngine()
 		delete xplicitNgine;
 	xplicitNgine = new XplicitNgine();
 	g_xplicitNgine = xplicitNgine;
+
 	for(size_t i = 0; i < getWorkspace()->partObjects.size(); i++)
 	{
 		PartInstance* partInstance = getWorkspace()->partObjects[i];
@@ -59,17 +72,14 @@ XplicitNgine * DataModelInstance::getEngine()
 void DataModelInstance::toggleRun()
 {
 	running = !running;
-	//if(!running)
-		//resetEngine();
 }
-
 bool DataModelInstance::isRunning()
 {
 	return running;
 }
 
 DataModelInstance::~DataModelInstance(void)
-{
+{	
 	delete xplicitNgine;
 }
 
@@ -303,11 +313,11 @@ bool DataModelInstance::scanXMLObject(xml_node<> * scanNode)
 				xml_node<> *propNode = node->first_node();
 				xml_node<> *cFrameNode=0;
 				xml_node<> *sizeNode=0;
-				xml_node<> *anchoredNode=0;
 				xml_node<> *shapeNode=0;
 				xml_node<> *colorNode=0;
 				xml_node<> *brickColorNode=0;
 				xml_node<> *nameNode=0;
+				xml_node<> *anchoredNode=0;
 
 				for (xml_node<> *partPropNode = propNode->first_node();partPropNode; partPropNode = partPropNode->next_sibling())
 				{
@@ -436,7 +446,8 @@ bool DataModelInstance::scanXMLObject(xml_node<> * scanNode)
 					}
 					if(anchoredNode)
 					{
-						test->setAnchored(stricmp(anchoredNode->value(), "true") == 0);
+						printf("Anchor this thing!!! : %s\n", anchoredNode->value());
+						test->anchored = stricmp(anchoredNode->value(), "true") == 0;
 					}
 					test->setSize(Vector3(sizeX,sizeY+_modY,sizeZ));
 					test->setName(newName);
@@ -490,9 +501,6 @@ bool DataModelInstance::load(const char* filename, bool clearObjects)
 		std::string hname = sfilename.substr(begin);
 		std::string tname = hname.substr(0, hname.length() - 5);
 		name = tname;
-		resetEngine();
-		selectionService->clearSelection();
-		selectionService->addSelected(this);
 		return true;
 	}
 	else
@@ -558,12 +566,12 @@ bool DataModelInstance::getOpen()
 	ZeroMemory( &of , sizeof( of));
 	of.lStructSize = sizeof(OPENFILENAME);
 	of.lpstrFilter = "Roblox Files\0*.rbxm;*.rbxl\0\0";
+	of.Flags = OFN_FILEMUSTEXIST;
 	char szFile[512];
 	of.lpstrFile = szFile ;
 	of.lpstrFile[0]='\0';
 	of.nMaxFile=500;
 	of.lpstrTitle="Hello";
-	of.Flags = OFN_FILEMUSTEXIST;
 	ShowCursor(TRUE);
 	BOOL file = GetOpenFileName(&of);
 	if (file)
@@ -571,6 +579,7 @@ bool DataModelInstance::getOpen()
 		_loadedFileName = of.lpstrFile;
 		load(of.lpstrFile,true);
 	}
+	//else MessageBox(NULL, "Failed to open dialog", "Failure", MB_ICONHAND | MB_OK);
 	return true;
 }
 void DataModelInstance::setMessage(std::string msg)
@@ -635,20 +644,34 @@ WorkspaceInstance* DataModelInstance::getWorkspace()
 {
 	return workspace;
 }
-
+/*Vector2 DataModelInstance::getMousePos()
+{
+	return Vector2(mousex,mousey);
+}
+void DataModelInstance::setMousePos(int x,int y)
+{
+	mousex=x;
+	mousey=y;
+}
+void DataModelInstance::setMousePos(Vector2 pos)
+{
+	mousex=pos.x;
+	mousey=pos.y;
+}*/
 GuiRootInstance* DataModelInstance::getGuiRoot()
 {
 	return guiRoot;
 }
 
-SelectionService* DataModelInstance::getSelectionService()
-{
-	return selectionService;
-}
 
 LevelInstance* DataModelInstance::getLevel()
 {
 	return level;
+}
+
+SelectionService* DataModelInstance::getSelectionService()
+{
+	return selectionService;
 }
 
 ThumbnailGeneratorInstance* DataModelInstance::getThumbnailGenerator()

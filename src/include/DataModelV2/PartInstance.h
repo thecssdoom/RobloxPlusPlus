@@ -16,6 +16,8 @@ public:
 	//Rendering
 	virtual void PartInstance::postRender(RenderDevice* rd);
 	virtual void render(RenderDevice*);
+
+	virtual void renderName(RenderDevice*);
 	
 	//Surfaces
 	Enum::SurfaceType::Value top;
@@ -29,6 +31,8 @@ public:
 	//Variables
 	Color3 color;
 	bool canCollide;
+	bool anchored;
+
 	dBodyID physBody;
 	dGeomID physGeom[3];
 
@@ -53,21 +57,25 @@ public:
 	void setShape(Enum::Shape::Value shape);
 	void setChanged();
 	void setSurface(int face, Enum::SurfaceType::Value surface);
-	void setAnchored(bool anchored);
-	bool isAnchored();
+
 	float getMass();
+
 	bool isDragging();
 	void setDragging(bool value);
+
 
 	//Collision
 	bool collides(PartInstance * part);
 	bool collides(Box);
-	
+
+	bool isAnchored();
+
+	void markShadows(RenderDevice * r,Vector4 light);
+
 	//Properties
 	virtual std::vector<PROPGRIDITEM> getProperties();
 	virtual void PropUpdate(LPPROPGRIDITEM &pItem);
 private:
-	bool anchored;
 	Vector3 position;
 	Vector3 size;
 	Vector3 velocity;

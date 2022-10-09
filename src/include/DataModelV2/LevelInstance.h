@@ -1,5 +1,6 @@
 #pragma once
 #include "instance.h"
+#include "Enum.h"
 
 class LevelInstance :
 	public Instance

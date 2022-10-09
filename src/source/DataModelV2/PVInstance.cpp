@@ -5,7 +5,7 @@ PVInstance::PVInstance(void)
 	Instance::Instance();
 	nameShown = false;
 	controllerFlagShown = true;
-	className = "PVInstance";
+	className = "Part";
 	listicon = 0;
 	controller = (Enum::Controller::Value)0;
 }

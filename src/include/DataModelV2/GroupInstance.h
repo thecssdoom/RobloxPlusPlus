@@ -13,4 +13,6 @@ public:
 	std::vector<Instance *> unGroup();
 	PartInstance * primaryPart;
 	void render(RenderDevice * r);
+
+	void markShadows(RenderDevice * r,Vector4 light);
 };

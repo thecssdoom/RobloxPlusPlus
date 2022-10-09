@@ -25,27 +25,27 @@ GCamera* CameraController::getCamera()
 }
 
 void CameraController::lookAt(const Vector3& position) {
-    const Vector3 look = (position - g3dCamera.getCoordinateFrame().translation);
+    const Vector3 look = (position - targetCoordinate.translation);
     yaw   = aTan2(look.x, -look.z);
 	
     pitch = -aTan2(look.y, distance(look.x, look.z));
-	CoordinateFrame frame = g3dCamera.getCoordinateFrame().translation;
+	CoordinateFrame frame = targetCoordinate.translation;
 	frame.rotation = Matrix3::fromEulerAnglesZYX(0, -yaw, -pitch);
-	g3dCamera.setCoordinateFrame(frame);
+
+	targetCoordinate = frame;
 }
 
 void CameraController::setFrame(const CoordinateFrame& cf) {
 	Vector3 look = cf.getLookVector();
-	g3dCamera.setCoordinateFrame(cf);
+
+	targetCoordinate = cf;
+
 	lookAt(cf.translation + look);
 	focusPosition=cf.translation+cf.lookVector()*zoom;
 }
 
 CoordinateFrame CameraController::getCoordinateFrame() {
-	CoordinateFrame cf;
-	cf.translation=translation;
-	cf.rotation = Matrix3::fromEulerAnglesZYX(0, -yaw, -pitch);
-	return cf;
+	return targetCoordinate;
 }
 
 void CameraController::refreshZoom(const CoordinateFrame& frame)
@@ -104,7 +104,7 @@ void CameraController::Zoom(short delta)
 	CoordinateFrame frame = g3dCamera.getCoordinateFrame();
 
 	if (delta>0) { // Mouse wheel up
-		CoordinateFrame zoomFrame = frame+frame.lookVector()*(zoom/5);
+		CoordinateFrame zoomFrame = frame+frame.lookVector()*(zoom/3);
 		zoom=(zoomFrame.translation-focusPosition).magnitude();
 		if (zoom>CAM_ZOOM_MIN)
 		{
@@ -117,7 +117,7 @@ void CameraController::Zoom(short delta)
 		}
 	}
 	else {
-		CoordinateFrame zoomFrame = frame-frame.lookVector()*(zoom/5);
+		CoordinateFrame zoomFrame = frame-frame.lookVector()*(zoom/3);
 		zoom=(zoomFrame.translation-focusPosition).magnitude();
 		if (zoom<CAM_ZOOM_MAX)
 		{
@@ -149,13 +149,13 @@ void CameraController::tiltUp()
 {
 
 	CoordinateFrame frame = CoordinateFrame(g3dCamera.getCoordinateFrame().rotation, g3dCamera.getCoordinateFrame().translation);
-	pan(&frame,0,toRadians(25));
+	pan(&frame,0,toRadians(10));
 	setFrame(frame);
 }
 void CameraController::tiltDown()
 {
 	CoordinateFrame frame = CoordinateFrame(g3dCamera.getCoordinateFrame().rotation, g3dCamera.getCoordinateFrame().translation);
-	pan(&frame,0,toRadians(-25));
+	pan(&frame,0,toRadians(-10));
 	setFrame(frame);
 }
 
@@ -190,24 +190,24 @@ void CameraController::update(Application* app)
 {
 	float offsetSize = 0.05F;
 
-	Vector3 cameraPos = g3dCamera.getCoordinateFrame().translation;
-	CoordinateFrame frame = g3dCamera.getCoordinateFrame();
+	Vector3 cameraPos = targetCoordinate.translation;
+	CoordinateFrame frame = targetCoordinate;
 	bool moving=false;
 	if(!app->viewportHasFocus())
 		return;
-	if(GetHoldKeyState('U')) {
+	if(GetHoldKeyState('W')) {
 		forwards = true;
 		moving=true;
 	}
-	if(GetHoldKeyState('J')) {
+	if(GetHoldKeyState('S')) {
 		backwards = true;
 		moving=true;
 	}
-	if(GetHoldKeyState('H')) {
+	if(GetHoldKeyState('A')) {
 		left = true;
 		moving=true;
 	}
-	if(GetHoldKeyState('K')) {
+	if(GetHoldKeyState('D')) {
 		right = true;
 		moving=true;
 	}
@@ -267,5 +267,12 @@ void CameraController::update(Application* app)
 	{
 		rightButtonHolding = false;
 	}
-	g3dCamera.setCoordinateFrame(frame);
+
+	targetCoordinate = frame;
+
+	g3dCamera.setCoordinateFrame(g3dCamera.getCoordinateFrame().lerp(targetCoordinate,0.33f));
+}
+
+void CameraController::setFocus(const PartInstance& part) {
+	//todo
 }

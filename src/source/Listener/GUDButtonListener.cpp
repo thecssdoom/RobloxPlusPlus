@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "Globals.h"
 #include "AudioPlayer.h"
-#include "DataModelV2/SelectionService.h"
 #include "Listener/GUDButtonListener.h"
 
 void GUDButtonListener::onButton1MouseClick(BaseButtonInstance* button)
@@ -30,6 +29,8 @@ void GUDButtonListener::onButton1MouseClick(BaseButtonInstance* button)
 
 				newinst.push_back(tempinst);
 				}
+				/*tempinst->setPosition(Vector3(tempPos.x, tempPos.y + tempSize.y, tempPos.z));
+				g_usableApp->cameraController.centerCamera(g_selectedInstances.at(0));*/
 			}
 			g_dataModel->getSelectionService()->clearSelection();
 			g_dataModel->getSelectionService()->addSelected(newinst);
@@ -37,7 +38,6 @@ void GUDButtonListener::onButton1MouseClick(BaseButtonInstance* button)
 		else if(button->name == "Group")
 		{
 			GroupInstance * inst = new GroupInstance();
-			inst->setParent(g_dataModel->getWorkspace());
 			for(size_t i = 0; i < g_dataModel->getSelectionService()->getSelection().size(); i++)
 			{
 				if(g_dataModel->getSelectionService()->getSelection()[i]->canDelete)
@@ -48,7 +48,10 @@ void GUDButtonListener::onButton1MouseClick(BaseButtonInstance* button)
 						inst->primaryPart = part;
 					}
 				}
+				/*tempinst->setPosition(Vector3(tempPos.x, tempPos.y + tempSize.y, tempPos.z));
+				g_usableApp->cameraController.centerCamera(g_selectedInstances.at(0));*/
 			}
+			inst->setParent(g_dataModel->getWorkspace());
 			g_dataModel->getSelectionService()->clearSelection();
 			g_dataModel->getSelectionService()->addSelected(inst);
 		}
@@ -67,6 +70,8 @@ void GUDButtonListener::onButton1MouseClick(BaseButtonInstance* button)
 						model = NULL;
 					}
 				}
+				/*tempinst->setPosition(Vector3(tempPos.x, tempPos.y + tempSize.y, tempPos.z));
+				g_usableApp->cameraController.centerCamera(g_selectedInstances.at(0));*/
 			}
 			g_dataModel->getSelectionService()->clearSelection();
 			g_dataModel->getSelectionService()->addSelected(newinst);

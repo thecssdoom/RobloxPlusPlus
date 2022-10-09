@@ -23,13 +23,27 @@ Instance::Instance(const Instance &oinst)
 	//setParent(oinst.parent);
 }
 
-
+void Instance::markShadows(RenderDevice* rd,Vector4 light)
+{
+	for(size_t i = 0; i < children.size(); i++)
+	{
+		children[i]->markShadows(rd,light);
+	}
+}
 
 void Instance::render(RenderDevice* rd)
 {
 	for(size_t i = 0; i < children.size(); i++)
 	{
 		children[i]->render(rd);
+	}
+}
+
+void Instance::renderName(RenderDevice* rd)
+{
+	for(size_t i = 0; i < children.size(); i++)
+	{
+		children[i]->renderName(rd);
 	}
 }
 

@@ -18,9 +18,7 @@ public:
 	void					update();
 	bool					mouseInGUI(G3D::RenderDevice* renderDevice,int x,int y);
 	void					onMouseLeftUp(G3D::RenderDevice* renderDevice, int x,int y);
-	void					hideGui(bool doHide);
 private:
 	std::string			_message;
 	G3D::RealTime		_messageTime;
-	bool				_hideGui;
 };

@@ -16,8 +16,9 @@ public:
 	bool nameShown;
 	bool controllerFlagShown;
 	Enum::Controller::Value controller;
-protected:
+
 	CoordinateFrame cFrame;
+protected:
 	static G3D::Color3 getControllerColor(int controller)
 	{
 		switch(controller)

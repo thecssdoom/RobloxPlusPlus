@@ -2,6 +2,7 @@
 	#define WIN32_LEAN_AND_MEAN
 #endif
 
+
 #include <windows.h>
 #include <Commdlg.h>
 #include "IEBrowser.h"
@@ -10,9 +11,6 @@
 #include "ax.h"
 #include "Tool/SurfaceTool.h"
 #include "Application.h"
-#include "Enum.h"
-#include "ToolEnum.h"
-#include "VS2005CompatShim.h"
 
 HRESULT IEBrowser::doExternal(std::wstring funcName,
   DISPID dispIdMember,
@@ -32,28 +30,16 @@ HRESULT IEBrowser::doExternal(std::wstring funcName,
 	}
 	else if (funcName==L"ToggleHopperBin")
 	{
-		MessageBox(NULL, "BOOP", "Boopity boop",MB_OK);
-
-		/*To-do Make enums in ToolEnum work with this properly, 
-		commented code is not fully tested.*/
-		/*MessageBox(NULL,
-				   std::to_string(pDispParams->rgvarg->intVal).c_str(),
-				   "Is it working?", 
-				   MB_OK);
-		Enum::Hopper::Value cont = (Enum::Hopper::Value)pDispParams->rgvarg->intVal;
-
-		switch (cont) 
-		{
-		case GameTool
-		case Grab
-			
-			break;
-		}*/
-		return S_OK;
+		pVarResult->vt = VT_INT;
+		pVarResult->intVal = 5;
+		//MessageBox(NULL, "BOOP", "Boopity boop",MB_OK);
 	}
 	else if (funcName==L"SetController")
 	{
 		bool ding = false;
+		//int len = SysStringLen(pDispParams->rgvarg->bstrVal)+1;
+		//char * args = new char[len];
+		//WideCharToMultiByte(CP_ACP, 0, pDispParams->rgvarg->bstrVal, len, args, len, NULL, (LPBOOL)TRUE);
 		if(pDispParams->rgvarg->intVal < 0 || pDispParams->rgvarg->intVal > 7)
 			return S_OK;
 		Enum::Controller::Value cont = (Enum::Controller::Value)pDispParams->rgvarg->intVal;
@@ -75,9 +61,20 @@ HRESULT IEBrowser::doExternal(std::wstring funcName,
 			return E_NOTIMPL;
 		int j = pDispParams->rgvarg->intVal;
 		int i = (pDispParams->rgvarg+1)->intVal;
+		//printf("Got values %d and %d", i, j);
 		if(i > 5 || i < 0)
 			return E_NOTIMPL;
 		g_usableApp->changeTool(new SurfaceTool(i, j));
+		/*VARIANT val1;
+		VARIANT val2;
+		unsigned int puArgErr;
+		HRESULT res = DispGetParam(pDispParams,1,VT_VARIANT,&val1, &puArgErr);
+		if(res != S_OK)
+			return res;
+		//res = DispGetParam(pDispParams,1,VT_UI4,&val2, &puArgErr);
+		//if(res != S_OK)
+			//return res;
+		*/
 		return S_OK;
 	}
 	else if(funcName==L"SetColor")
@@ -98,6 +95,11 @@ HRESULT IEBrowser::doExternal(std::wstring funcName,
 		color.Flags = CC_FULLOPEN | CC_RGBINIT; 
 		if(ChooseColorA((LPCHOOSECOLOR)&color))
 		{
+			//DWORD dwR = GetRValue(color.rgbResult);
+			//DWORD dwG = GetGValue(color.rgbResult);
+			//DWORD dwB = GetBValue(color.rgbResult);
+			//wchar_t * str = L"Test";
+			//swprintf_s(str, 16, L"#%02X%02X%02X", dwR, dwG, dwB);
 			pVarResult->vt = VT_UI4;
 			pVarResult->ulVal = color.rgbResult;
 		}
