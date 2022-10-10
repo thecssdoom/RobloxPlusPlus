@@ -25,6 +25,9 @@ void HopperTool::onButton1MouseDown(Mouse mouse)
 		explode->position = pos;
 		explode->setParent(g_dataModel->getWorkspace());
 		explode->setBlastRadius(12.0F);
+#ifdef _DEBUG
+		explode->setBlastRadius(100.0F);
+#endif
 		explode->setBlastPressure(500000.0F);
 	}
 }

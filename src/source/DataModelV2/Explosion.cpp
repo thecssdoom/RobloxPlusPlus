@@ -50,7 +50,7 @@ void Explosion::doBlast(const std::vector<PartInstance *> parts) {
 				Vector3 delta = (parts[i]->getCFrame().translation - position);
 				Vector3 normal = (delta == Vector3::zero()) ? Vector3::unitY() : delta.direction();
 
-				if (delta.magnitude() <= (blastRadius)/2.0f) {
+				if (delta.magnitude() <= (blastRadius+(parts[i]->getPartPrimitive()->getRadius()/2))/2.0f) {
 					float radius = parts[i]->getPartPrimitive()->getRadius();
 					float dt = 0.12f;
 
