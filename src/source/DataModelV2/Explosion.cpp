@@ -139,8 +139,9 @@ Explosion::~Explosion(void)
 
 }
 
-char blastRadiusText[32];
-char blastPressureText[32];
+char blastRadiusText[256];
+char blastPressureText[256];
+char blastTimerText[256];
 char eto[512];
 
 std::vector<PROPGRIDITEM> Explosion::getProperties()
@@ -159,6 +160,7 @@ std::vector<PROPGRIDITEM> Explosion::getProperties()
 
 	sprintf_s(blastRadiusText, "%f", blastRadius);
 	sprintf_s(blastPressureText, "%f", blastPressure);
+	sprintf_s(blastTimerText, "%f", blastTimer*2);
 	properties.push_back(createPGI("Data",
 		"BlastRadius",
 		"How big the Explosion is. This is a circle start from the center of the Explosion's Position, the larger this property the larger distance it will go.",
@@ -168,6 +170,11 @@ std::vector<PROPGRIDITEM> Explosion::getProperties()
 		"BlastPressure",
 		"How much force this Explosion exerts on objects within it's BlastRadius. Setting this to 0 causes a purely graphical explosions, while higher values will cause Parts to fly away at high speeds.",
 		(LPARAM)blastPressureText,
+		PIT_EDIT));
+	properties.push_back(createPGI("Data",
+		"BlastTimer",
+		"How much time until the explosion occurs.",
+		(LPARAM)blastTimerText,
 		PIT_EDIT));
 
 	properties.push_back(createPGI(
@@ -231,6 +238,10 @@ void Explosion::PropUpdate(LPPROPGRIDITEM &item)
 	else if(strcmp(item->lpszPropName, "BlastPressure") == 0)
 	{
 		setBlastPressure(atoi((LPSTR)item->lpCurValue));
+	}
+	else if(strcmp(item->lpszPropName, "BlastTimer") == 0)
+	{
+		blastTimer = (atof((LPSTR)item->lpCurValue))/2.0f;
 	}
 	else if(strcmp(item->lpszPropName, "Visible") == 0)
 	{
