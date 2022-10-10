@@ -1,4 +1,5 @@
 #include "DataModelV2/PartInstance.h"
+#include "DataModelV2/Primitive.h"
 #include "Globals.h"
 #include "Renderer.h"
 #include <sstream>
@@ -28,6 +29,8 @@ PartInstance::PartInstance(void)
 	bottom = Enum::SurfaceType::Smooth;
 	shape = Enum::Shape::Block;
 	dragging = false;
+
+	primitive = new Primitive();
 }
 
 bool PartInstance::isDragging()
@@ -183,6 +186,8 @@ PartInstance::PartInstance(const PartInstance &oinst)
 	shape = oinst.shape;
 	changed = true;
 	dragging = false;
+
+	primitive = new Primitive();
 }
 
 void PartInstance::setSize(Vector3 newSize)
@@ -222,6 +227,8 @@ void PartInstance::setSize(Vector3 newSize)
 
 	if(this->physBody != NULL)
 		g_dataModel->getEngine()->resetBody(this);
+
+	primitive->setSize(size);
 }
 Vector3 PartInstance::getSize()
 {
@@ -523,4 +530,10 @@ float PartInstance::getMass()
 bool PartInstance::isAnchored()
 {
 	return anchored;
+}
+
+
+
+Primitive* PartInstance::getPartPrimitive() {
+	return primitive;
 }

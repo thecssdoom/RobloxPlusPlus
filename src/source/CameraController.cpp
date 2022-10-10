@@ -193,81 +193,81 @@ void CameraController::update(Application* app)
 	Vector3 cameraPos = targetCoordinate.translation;
 	CoordinateFrame frame = targetCoordinate;
 	bool moving=false;
-	if(!app->viewportHasFocus())
-		return;
-	if(GetHoldKeyState('W')) {
-		forwards = true;
-		moving=true;
-	}
-	if(GetHoldKeyState('S')) {
-		backwards = true;
-		moving=true;
-	}
-	if(GetHoldKeyState('A')) {
-		left = true;
-		moving=true;
-	}
-	if(GetHoldKeyState('D')) {
-		right = true;
-		moving=true;
-	}
-	
-	if(forwards) {
-		forwards = false;
-		frame.translation += frame.lookVector()*moveRate;
-	}
-	else if(backwards) {
-		backwards = false;
-		frame.translation -= frame.lookVector()*moveRate;
-	}
-	if(left) {
-		left = false;
-		frame.translation += frame.leftVector()*moveRate;
-	}
-	else if(right) {
-		right = false;
-		frame.translation += frame.rightVector()*moveRate;
-	}
 
-	if (moving)
-	{
-		zoom=7;
-		focusPosition=frame.translation+frame.lookVector()*zoom;
-	}
+	if(app->viewportHasFocus()) {
+		if(GetHoldKeyState('W')) {
+			forwards = true;
+			moving=true;
+		}
+		if(GetHoldKeyState('S')) {
+			backwards = true;
+			moving=true;
+		}
+		if(GetHoldKeyState('A')) {
+			left = true;
+			moving=true;
+		}
+		if(GetHoldKeyState('D')) {
+			right = true;
+			moving=true;
+		}
+		
+		if(forwards) {
+			forwards = false;
+			frame.translation += frame.lookVector()*moveRate;
+		}
+		else if(backwards) {
+			backwards = false;
+			frame.translation -= frame.lookVector()*moveRate;
+		}
+		if(left) {
+			left = false;
+			frame.translation += frame.leftVector()*moveRate;
+		}
+		else if(right) {
+			right = false;
+			frame.translation += frame.rightVector()*moveRate;
+		}
 
-	if(rightButtonHolding) {
-		Globals::useMousePoint = true;
-		Globals::mousepoint = oldDesktopMouse;
-		POINT mouse;
-		GetCursorPos(&mouse);
-		pan(&frame,(mouse.x-oldDesktopMouse.x)/100.f,(mouse.y-oldDesktopMouse.y)/100.f);
-		SetCursorPos(oldDesktopMouse.x,oldDesktopMouse.y);
-	}
-	else
-	{
-		Globals::useMousePoint = false;
-	}
-
-	if(GetHoldKeyState(VK_RSHIFT) || GetHoldKeyState(VK_LSHIFT)) {
-		moveRate = 2;
-	}
-	else {
-		moveRate = 1;
-	}
-
-	if(GetHoldKeyState(VK_RBUTTON))
-	{
-		if (rightButtonHolding==false)
+		if (moving)
 		{
-			GetCursorPos(&oldDesktopMouse);
-			rightButtonHolding = true;
+			zoom=7;
+			focusPosition=frame.translation+frame.lookVector()*zoom;
+		}
+
+		if(rightButtonHolding) {
+			Globals::useMousePoint = true;
+			Globals::mousepoint = oldDesktopMouse;
+			POINT mouse;
+			GetCursorPos(&mouse);
+			pan(&frame,(mouse.x-oldDesktopMouse.x)/100.f,(mouse.y-oldDesktopMouse.y)/100.f);
+			SetCursorPos(oldDesktopMouse.x,oldDesktopMouse.y);
+		}
+		else
+		{
+			Globals::useMousePoint = false;
+		}
+
+		if(GetHoldKeyState(VK_RSHIFT) || GetHoldKeyState(VK_LSHIFT)) {
+			moveRate = 2;
+		}
+		else {
+			moveRate = 1;
+		}
+
+		if(GetHoldKeyState(VK_RBUTTON))
+		{
+			if (rightButtonHolding==false)
+			{
+				GetCursorPos(&oldDesktopMouse);
+				rightButtonHolding = true;
+			}
+		}
+		else
+		{
+			rightButtonHolding = false;
 		}
 	}
-	else
-	{
-		rightButtonHolding = false;
-	}
-
 	targetCoordinate = frame;
 
 	g3dCamera.setCoordinateFrame(g3dCamera.getCoordinateFrame().lerp(targetCoordinate,0.33f));

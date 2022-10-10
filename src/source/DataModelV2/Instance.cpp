@@ -51,6 +51,14 @@ void Instance::update()
 {
 }
 
+void Instance::simulate(float sdt)
+{
+	for(size_t i = 0; i < children.size(); i++)
+	{
+		children[i]->simulate(sdt);
+	}
+}
+
 PROPGRIDITEM Instance::createPGI(LPSTR catalog, LPSTR propName, LPSTR propDesc, LPARAM curVal, INT type, TCHAR choices[])
 {
 	PROPGRIDITEM pItem;

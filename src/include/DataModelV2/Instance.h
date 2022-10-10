@@ -35,6 +35,8 @@ public:
 	virtual void PropUpdate(LPPROPGRIDITEM &pItem);
 	int listicon;
 
+	virtual void simulate(float sdt);
+
 	void markShadows(RenderDevice * r,Vector4 light);
 protected:
 	std::string className;

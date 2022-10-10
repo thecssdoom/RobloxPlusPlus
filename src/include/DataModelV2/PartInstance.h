@@ -1,5 +1,6 @@
 #pragma once
 #include "PVInstance.h"
+#include "Primitive.h"
 #include "Enum.h"
 #define _USE_MATH_DEFINES
 #include <cmath>
@@ -63,6 +64,8 @@ public:
 	bool isDragging();
 	void setDragging(bool value);
 
+	Primitive* getPartPrimitive();
+
 
 	//Collision
 	bool collides(PartInstance * part);
@@ -83,5 +86,8 @@ private:
 	bool changed;
 	bool dragging;
 	Box itemBox;
+
+	Primitive* primitive;
+
 	GLuint glList;
 };

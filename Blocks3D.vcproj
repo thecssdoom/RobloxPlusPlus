@@ -48,8 +48,8 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="2"
-				InlineFunctionExpansion="1"
+				Optimization="0"
+				InlineFunctionExpansion="0"
 				AdditionalIncludeDirectories="&quot;.\src\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
@@ -147,7 +147,7 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
+				Optimization="2"
 				AdditionalIncludeDirectories="&quot;.\src\include&quot; "
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="false"
@@ -398,7 +398,7 @@
 					</FileConfiguration>
 				</File>
 				<File
-					RelativePath=".\src\source\DataModelV2\ExplosionInstance.cpp"
+					RelativePath=".\src\source\DataModelV2\Explosion.cpp"
 					>
 				</File>
 				<File
@@ -492,6 +492,10 @@
 							XMLDocumentationFileName="$(IntDir)\$(InputName)1.xdc"
 						/>
 					</FileConfiguration>
+				</File>
+				<File
+					RelativePath=".\src\source\DataModelV2\Primitive.cpp"
+					>
 				</File>
 				<File
 					RelativePath=".\src\source\DataModelV2\PVInstance.cpp"
@@ -861,7 +865,7 @@
 					>
 				</File>
 				<File
-					RelativePath=".\src\include\DataModelV2\ExplosionInstance.h"
+					RelativePath=".\src\include\DataModelV2\Explosion.h"
 					>
 				</File>
 				<File
@@ -886,6 +890,10 @@
 				</File>
 				<File
 					RelativePath=".\src\include\DataModelV2\PartInstance.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\include\DataModelV2\Primitive.h"
 					>
 				</File>
 				<File

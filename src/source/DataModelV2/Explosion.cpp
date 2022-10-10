@@ -1,18 +1,21 @@
-#include "DataModelV2/ExplosionInstance.h"
+#include "DataModelV2/Explosion.h"
 #include "Globals.h"
 #include "Renderer.h"
 #include <sstream>
 #include <iomanip>
 #include "Faces.h"
 
-ExplosionInstance::ExplosionInstance(void)
+Explosion::Explosion(void)
 {
     glList = glGenLists(1);
 	name = "Explosion";
 	className = "Explosion";
 	
-	blastPressure	= 50000;
-	blastRadius		= 20;
+	blastPressure	= 500000.0F;
+	blastRadius		= 4;
+
+	blastTimer = 0.25F;
+	hasExploded = false;
 
 	listicon = 17;
 
@@ -21,10 +24,64 @@ ExplosionInstance::ExplosionInstance(void)
 	position = Vector3(0,0,0);
 }
 
-void ExplosionInstance::postRender(RenderDevice *rd) { }
-void ExplosionInstance::blastOff() { }
 
-void ExplosionInstance::setParent(Instance* prnt) 
+void Explosion::setBlastRadius(float _blastRadius)
+{ blastRadius = _blastRadius; }
+
+void Explosion::setBlastPressure(float _blastPressure)
+{ blastPressure = _blastPressure; }
+
+float Explosion::getBlastRadius()
+{ return blastRadius; }
+
+float Explosion::getBlastPressure()
+{ return blastPressure; }
+
+
+
+void Explosion::postRender(RenderDevice *rd) { }
+
+void Explosion::doBlast(const std::vector<PartInstance *> parts) { 
+	if (blastPressure > 0.0f) {
+		for (size_t i = 0; i < parts.size(); ++i) {
+			Primitive* p = parts[i]->getPartPrimitive();
+
+			Vector3 delta = (parts[i]->getCFrame().translation - position);
+			Vector3 normal = (delta == Vector3::zero()) ? Vector3::unitY() : delta.direction();
+
+			if (delta.magnitude() <= (blastRadius+p->getRadius())/2.0f) {
+				float radius = p->getRadius();
+				float dt = 0.12f;
+
+				Vector3 impulse = (normal * blastPressure) * (1.0f / 4560.0f) * dt;
+				Vector3 angle = (impulse * 0.5 * radius) * dt;
+
+				dBodySetLinearVel(parts[i]->physBody,impulse.x,impulse.y,impulse.z);
+				dBodySetAngularVel(parts[i]->physBody,angle.x,angle.y,angle.z);
+
+				printf("part got hit");
+			}
+
+		}
+	}
+
+	hasExploded = true;
+}
+
+void Explosion::simulate(float sdt) { 
+	blastTimer -= sdt;
+
+	//printf("aa");
+
+	if (blastTimer <= 0) {
+		if (!hasExploded) {
+			doBlast(g_dataModel->getWorkspace()->partObjects);
+		}
+		blastTimer = 0;
+	}
+}
+
+void Explosion::setParent(Instance* prnt) 
 { 
 	Instance * cparent = getParent();
 	while(cparent != NULL)
@@ -46,7 +103,7 @@ void ExplosionInstance::setParent(Instance* prnt)
 	}
 }
 
-ExplosionInstance::ExplosionInstance(const ExplosionInstance &oinst)
+Explosion::Explosion(const Explosion &oinst)
 {
 	glList = glGenLists(1);
 	name = "Explosion";
@@ -60,13 +117,13 @@ ExplosionInstance::ExplosionInstance(const ExplosionInstance &oinst)
 	position = oinst.position;
 }
 
-void ExplosionInstance::render(RenderDevice* rd) {
-	if (!visible)
+void Explosion::render(RenderDevice* rd) {
+	if (!visible || hasExploded)
 		return;
 
 	rd->disableLighting();
 
-	Vector3 renderSize = Vector3(blastRadius/2,blastRadius/2,blastRadius/2);
+	Vector3 renderSize = Vector3(blastRadius/2.0f,blastRadius/2.0f,blastRadius/2.0f);
 	//glScalef(0.5f,0.5f,0.5f);
 	rd->setObjectToWorldMatrix(CoordinateFrame(position));
 
@@ -77,7 +134,7 @@ void ExplosionInstance::render(RenderDevice* rd) {
 	rd->enableLighting();
 }
 
-ExplosionInstance::~ExplosionInstance(void)
+Explosion::~Explosion(void)
 {
 
 }
@@ -86,7 +143,7 @@ char blastRadiusText[32];
 char blastPressureText[32];
 char eto[512];
 
-std::vector<PROPGRIDITEM> ExplosionInstance::getProperties()
+std::vector<PROPGRIDITEM> Explosion::getProperties()
 {
 	std::vector<PROPGRIDITEM> properties = Instance::getProperties();
     
@@ -100,8 +157,8 @@ std::vector<PROPGRIDITEM> ExplosionInstance::getProperties()
 		PIT_EDIT
 		));
 
-	sprintf_s(blastRadiusText, "%i", blastRadius);
-	sprintf_s(blastPressureText, "%i", blastPressure);
+	sprintf_s(blastRadiusText, "%f", blastRadius);
+	sprintf_s(blastPressureText, "%f", blastPressure);
 	properties.push_back(createPGI("Data",
 		"BlastRadius",
 		"How big the Explosion is. This is a circle start from the center of the Explosion's Position, the larger this property the larger distance it will go.",
@@ -132,7 +189,7 @@ std::vector<PROPGRIDITEM> ExplosionInstance::getProperties()
 	return properties;
 }
 
-void ExplosionInstance::PropUpdate(LPPROPGRIDITEM &item)
+void Explosion::PropUpdate(LPPROPGRIDITEM &item)
 {
 	if(strcmp(item->lpszPropName, "Color3") == 0)
 	{
@@ -169,11 +226,11 @@ void ExplosionInstance::PropUpdate(LPPROPGRIDITEM &item)
 
 	else if(strcmp(item->lpszPropName, "BlastRadius") == 0)
 	{
-		blastRadius = atoi((LPSTR)item->lpCurValue);
+		setBlastRadius(atoi((LPSTR)item->lpCurValue));
 	}
 	else if(strcmp(item->lpszPropName, "BlastPressure") == 0)
 	{
-		blastPressure = atoi((LPSTR)item->lpCurValue);
+		setBlastPressure(atoi((LPSTR)item->lpCurValue));
 	}
 	else if(strcmp(item->lpszPropName, "Visible") == 0)
 	{
@@ -182,12 +239,12 @@ void ExplosionInstance::PropUpdate(LPPROPGRIDITEM &item)
 	else Instance::PropUpdate(item);
 }
 
-bool ExplosionInstance::isVisible()
+bool Explosion::isVisible()
 {
 	return visible;
 }
 
-void ExplosionInstance::setVisible(bool Visible)
+void Explosion::setVisible(bool Visible)
 {
 	visible = Visible;
 }

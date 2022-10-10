@@ -4,7 +4,7 @@
 #include "resource.h"
 #include "DataModelV2/Instance.h"
 #include "DataModelV2/PartInstance.h"
-#include "DataModelV2/ExplosionInstance.h"
+#include "DataModelV2/Explosion.h"
 #include "DataModelV2/TextButtonInstance.h"
 #include "DataModelV2/ImageButtonInstance.h"
 #include "DataModelV2/DataModelInstance.h"
@@ -308,10 +308,12 @@ void Application::onInit()  {
 
 
 
-	ExplosionInstance* explode = new ExplosionInstance();
+	Explosion* explode = new Explosion();
 
 	explode->position = Vector3(0,0,0);
 	explode->setParent(_dataModel->getWorkspace());
+	explode->setBlastRadius(15.0F);
+
 #else
 	_dataModel->debugGetOpen();
 #endif
@@ -370,6 +372,8 @@ void Application::onSimulation(RealTime rdt, SimTime sdt, SimTime idt) {
 		for(int i = 0; i < 4; i++)
 		{
 			_dataModel->getEngine()->step(0.03F);
+
+			_dataModel->getWorkspace()->simulate(0.03F);
 		}
 
 		onLogic();
@@ -728,7 +732,7 @@ void Application::onGraphics(RenderDevice* rd) {
 
 	_dataModel->getWorkspace()->render(rd);
 
-	_dataModel->getWorkspace()->renderName(rd);
+	//_dataModel->getWorkspace()->renderName(rd);
 
 	//SHADOWS
 	//_dataModel->getWorkspace()->render(rd);
