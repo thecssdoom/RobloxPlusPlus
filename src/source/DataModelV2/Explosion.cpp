@@ -19,6 +19,8 @@ Explosion::Explosion(void)
 
 	listicon = 17;
 
+	visible = true;
+
 	color = Color3(1,0,0);
 
 	position = Vector3(0,0,0);
@@ -44,24 +46,27 @@ void Explosion::postRender(RenderDevice *rd) { }
 void Explosion::doBlast(const std::vector<PartInstance *> parts) { 
 	if (blastPressure > 0.0f) {
 		for (size_t i = 0; i < parts.size(); ++i) {
-			Primitive* p = parts[i]->getPartPrimitive();
+			if (parts[i] != NULL) {
+				Vector3 delta = (parts[i]->getCFrame().translation - position);
+				Vector3 normal = (delta == Vector3::zero()) ? Vector3::unitY() : delta.direction();
 
-			Vector3 delta = (parts[i]->getCFrame().translation - position);
-			Vector3 normal = (delta == Vector3::zero()) ? Vector3::unitY() : delta.direction();
+				if (delta.magnitude() <= (blastRadius)/2.0f) {
+					float radius = parts[i]->getPartPrimitive()->getRadius();
+					float dt = 0.12f;
 
-			if (delta.magnitude() <= (blastRadius+p->getRadius())/2.0f) {
-				float radius = p->getRadius();
-				float dt = 0.12f;
+					Vector3 impulse = (normal * blastPressure) * (1.0f / 4560.0f) * dt;
+					Vector3 angle = (impulse * 0.5 * radius) * dt;
 
-				Vector3 impulse = (normal * blastPressure) * (1.0f / 4560.0f) * dt;
-				Vector3 angle = (impulse * 0.5 * radius) * dt;
+					if(parts[i]->physBody) {
+						dBodyEnable(parts[i]->physBody);
 
-				dBodySetLinearVel(parts[i]->physBody,impulse.x,impulse.y,impulse.z);
-				dBodySetAngularVel(parts[i]->physBody,angle.x,angle.y,angle.z);
+						dBodySetLinearVel(parts[i]->physBody,impulse.x,impulse.y,impulse.z);
+						dBodySetAngularVel(parts[i]->physBody,angle.x,angle.y,angle.z);
+					}
 
-				printf("part got hit");
+					printf("part got hit");
+				}
 			}
-
 		}
 	}
 

@@ -157,21 +157,22 @@ void Application::deleteInstance()
 {
 	if(_dataModel->getSelectionService()->getSelection().size() > 0)
 	{
-		size_t undeletable = 0;
-		while(_dataModel->getSelectionService()->getSelection().size() > undeletable)
+		std::vector<Instance *> selection = _dataModel->getSelectionService()->getSelection();
+		std::vector<Instance *> toDelete;
+		for(size_t i = 0; i < selection.size(); i++) {
+			if(selection[i]->canDelete) {
+				toDelete.push_back(selection[i]);
+			}
+		}
+		if(toDelete.size() > 0)
 		{
-			if(_dataModel->getSelectionService()->getSelection().at(0)->canDelete)
-			{
-				AudioPlayer::playSound(GetFileInPath("/content/sounds/pageturn.wav"));
-				Instance* selectedInstance = g_dataModel->getSelectionService()->getSelection()[0];
-				_dataModel->getSelectionService()->removeChild(selectedInstance);
+			AudioPlayer::playSound(GetFileInPath("/content/sounds/pageturn.wav"));
+			for(size_t i = 0; i < toDelete.size(); i++) {
+				Instance* selectedInstance = toDelete[i];
+				_dataModel->getSelectionService()->removeSelected(selectedInstance);
 				selectedInstance->setParent(NULL);
 				delete selectedInstance;
 				selectedInstance = NULL;
-			}
-			else
-			{
-				undeletable++;
 			}
 		}
 	}
@@ -372,7 +373,6 @@ void Application::onSimulation(RealTime rdt, SimTime sdt, SimTime idt) {
 		for(int i = 0; i < 4; i++)
 		{
 			_dataModel->getEngine()->step(0.03F);
-
 			_dataModel->getWorkspace()->simulate(0.03F);
 		}
 
@@ -721,23 +721,9 @@ void Application::onGraphics(RenderDevice* rd) {
 	glEnableClientState(GL_VERTEX_ARRAY);
 	glEnableClientState(GL_COLOR_ARRAY);
 	glEnableClientState(GL_NORMAL_ARRAY);
-	//if(_dataModel->getWorkspace() != NULL)
-	
-	//RESET LIGHTING
-
-	//renderDevice->setAmbientLightColor(lighting.ambient);
-	//renderDevice->setBlendFunc(RenderDevice::BLEND_ZERO,RenderDevice::BLEND_ZERO);
-	//renderDevice->setShininess(0);
-	//renderDevice->setSpecularCoefficient(Color3(0.0F, 0.0F, 0.0F));
 
 	_dataModel->getWorkspace()->render(rd);
 
-	//_dataModel->getWorkspace()->renderName(rd);
-
-	//SHADOWS
-	//_dataModel->getWorkspace()->render(rd);
-
-	//else throw std::exception("Workspace not found");
 	glDisableClientState(GL_VERTEX_ARRAY);
 	glDisableClientState(GL_COLOR_ARRAY);
 	glDisableClientState(GL_NORMAL_ARRAY);

@@ -48,13 +48,14 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				Optimization="0"
-				InlineFunctionExpansion="0"
+				Optimization="2"
+				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="&quot;.\src\include&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS"
 				StringPooling="true"
 				RuntimeLibrary="2"
-				EnableFunctionLevelLinking="true"
+				BufferSecurityCheck="false"
+				EnableFunctionLevelLinking="false"
 				PrecompiledHeaderFile=".\Release/Blocks3D.pch"
 				AssemblerListingLocation=".\Release/"
 				ObjectFile=".\Release/"
@@ -84,6 +85,7 @@
 				AdditionalManifestDependencies=""
 				ProgramDatabaseFile=".\Release/Blocks3D.pdb"
 				SubSystem="2"
+				StackReserveSize="16777216"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -148,11 +150,13 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="2"
+				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories="&quot;.\src\include&quot; "
 				PreprocessorDefinitions="WIN32;_DEBUG;_WINDOWS"
 				MinimalRebuild="false"
 				BasicRuntimeChecks="0"
 				RuntimeLibrary="3"
+				BufferSecurityCheck="false"
 				EnableFunctionLevelLinking="false"
 				PrecompiledHeaderFile=".\Debug/Blocks3D.pch"
 				AssemblerListingLocation=".\Debug/"
@@ -325,6 +329,10 @@
 				>
 				<File
 					RelativePath=".\src\source\Tool\ArrowTool.cpp"
+					>
+				</File>
+				<File
+					RelativePath=".\src\source\Tool\HopperTool.cpp"
 					>
 				</File>
 				<File
@@ -762,6 +770,10 @@
 				>
 			</File>
 			<File
+				RelativePath=".\src\include\ToolEnum.h"
+				>
+			</File>
+			<File
 				RelativePath=".\src\include\win32Defines.h"
 				>
 			</File>
@@ -846,6 +858,10 @@
 				>
 				<File
 					RelativePath=".\src\include\Tool\ArrowTool.h"
+					>
+				</File>
+				<File
+					RelativePath=".\src\include\Tool\HopperTool.h"
 					>
 				</File>
 				<File

@@ -3,6 +3,7 @@
 #include "DataModelV2/ToggleImageButtonInstance.h"
 #include "DataModelV2/DataModelInstance.h"
 #include "DataModelV2/ThumbnailService.h"
+#include "DataModelV2/Explosion.h"
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -501,6 +502,7 @@ bool DataModelInstance::load(const char* filename, bool clearObjects)
 		std::string hname = sfilename.substr(begin);
 		std::string tname = hname.substr(0, hname.length() - 5);
 		name = tname;
+
 		return true;
 	}
 	else

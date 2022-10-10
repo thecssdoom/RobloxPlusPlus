@@ -19,6 +19,12 @@ Instance * parent = NULL;
 const int CX_BITMAP = 16;
 const int CY_BITMAP = 16;
 
+void PropertyWindow::clearExplorer()
+{
+	SendMessage(_explorerComboBox,CB_RESETCONTENT,0,0); 
+	SendMessage(_explorerComboBox,CB_SETCURSEL,0,(LPARAM)0);
+}
+
 
 HBITMAP CreateBitmapMask(HBITMAP hbmColour, COLORREF crTransparent)
 {
@@ -346,7 +352,7 @@ void PropertyWindow::_resize()
 
 void PropertyWindow::UpdateSelected(std::vector<Instance *> instances)
 {
-	if(instances.size() < 0)
+	if(instances.size() <= 0)
 	{
 		ClearProperties();
 		return;
@@ -354,7 +360,7 @@ void PropertyWindow::UpdateSelected(std::vector<Instance *> instances)
 	Instance * instance = instances[0];
 	PropGrid_ResetContent(_propGrid);
 	prop = instance->getProperties();
-	if (selectedInstance != instance)
+	//if (selectedInstance != instance)
 	{
 		selectedInstance = instance;
 		for(size_t i = 0; i < prop.size(); i++)
@@ -375,5 +381,6 @@ void PropertyWindow::UpdateSelected(std::vector<Instance *> instances)
 
 void PropertyWindow::ClearProperties()
 {
+	clearExplorer();
 	PropGrid_ResetContent(_propGrid);
 }

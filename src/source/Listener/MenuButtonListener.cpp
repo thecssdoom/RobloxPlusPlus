@@ -42,7 +42,7 @@ void MenuButtonListener::onButton1MouseClick(BaseButtonInstance* button)
 		g_dataModel->toggleRun();
 		((ToggleImageButtonInstance*)button)->checked = g_dataModel->isRunning();
 	}
-	else if(button->name == "file")
+	else if(button->name == "edit")
 	{
 		HMENU mainmenu = CreatePopupMenu();
 		AppendMenu(mainmenu, MF_STRING, 100, "New");

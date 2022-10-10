@@ -9,6 +9,7 @@ public:
 	void	ClearProperties();
 	void	onResize();
 	void	refreshExplorer(std::vector<Instance *> selection);
+	void	clearExplorer();
 	HWND	_hwndProp;
 private:
 	HWND	_propGrid;

@@ -1,3 +1,5 @@
+#pragma once
+#include "Instance.h"
 #include "PropertyWindow.h"
 
 class SelectionService : public Instance

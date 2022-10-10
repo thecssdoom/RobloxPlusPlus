@@ -7,10 +7,16 @@
 #include <Commdlg.h>
 #include "IEBrowser.h"
 #include "Globals.h"
+
 #pragma once
 #include "ax.h"
 #include "Tool/SurfaceTool.h"
+#include "Tool/HopperTool.h"
+#include <iostream>   // std::cout
+#include <sstream>     // std::string, std::to_string
 #include "Application.h"
+#include "Enum.h"
+#include "ToolEnum.h"
 
 HRESULT IEBrowser::doExternal(std::wstring funcName,
   DISPID dispIdMember,
@@ -30,9 +36,11 @@ HRESULT IEBrowser::doExternal(std::wstring funcName,
 	}
 	else if (funcName==L"ToggleHopperBin")
 	{
-		pVarResult->vt = VT_INT;
-		pVarResult->intVal = 5;
-		//MessageBox(NULL, "BOOP", "Boopity boop",MB_OK);
+		int i = pDispParams->rgvarg->intVal;
+
+		g_usableApp->changeTool(new HopperTool(Enum::Hopper::Value(i)));
+
+		return S_OK;
 	}
 	else if (funcName==L"SetController")
 	{
