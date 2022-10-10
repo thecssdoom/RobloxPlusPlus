@@ -2,7 +2,11 @@
 
 SelectionService::SelectionService(void){
 	Instance::Instance();
+	name = "SelectionService";
+	className = "SelectionService";
 	propertyWindow = NULL;
+
+	listicon = 42;
 }
 
 SelectionService::~SelectionService(void){
